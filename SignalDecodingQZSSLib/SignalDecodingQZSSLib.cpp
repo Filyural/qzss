@@ -3,43 +3,26 @@
 
 #include "pch.h"
 
-BitContainer::BitContainer(size_t initialSize) {
-    size = initialSize;
-    bits.resize((size + sizeof(int) - 1) / sizeof(int));
-}
+namespace Bits {
+	BitContainer::BitContainer(int size) : m_data(size) {}
 
-bool BitContainer::get(size_t index) const {
-    if (index >= size) {
-        throw std::out_of_range("Index out of range");
-    }
-    int word = bits[index / (sizeof(int) * 8)];
-    int mask = 1 << (index % (sizeof(int) * 8));
-    return (word & mask) != 0;
-}
+	bool BitContainer::get(int index) const{
+		return m_data[index];
+	}
 
-void BitContainer::set(size_t index, bool value) {
-    if (index >= size) {
-        throw std::out_of_range("Index out of range");
-    }
-    int& word = bits[index / (sizeof(int) * 8)];
-    int mask = 1 << (index % (sizeof(int) * 8));
-    if (value) {
-        word |= mask;
-    }
-    else {
-        word &= ~mask;
-    }
-}
+	void BitContainer::set(int index, bool value) {
+		m_data[index] = value;
+	}
 
-void BitContainer::add(bool value) {
-    if (size >= bits.size() * sizeof(int) * 8) {
-        size_t newSize = size * 2;
-        bits.resize((newSize + sizeof(int) - 1) / sizeof(int));
-    }
-    set(size, value);
-    size++;
-}
+	void BitContainer::toggle(int index) {
+		m_data[index] = !m_data[index];
+	}
 
-size_t BitContainer::getMemoryUsage() const {
-    return sizeof(bits);
+	void BitContainer::clear() {
+		m_data.clear();
+	}
+
+	int BitContainer::size() const {
+		return m_data.size();
+	}
 }
