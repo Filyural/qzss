@@ -65,20 +65,24 @@ namespace Bits
     static BitContainer ReadFileToBC(std::string path)
     {
         std::ifstream bit_file;
-        bit_file.open("C:\\files\\lex_2023-03-06.log", std::ifstream::in | std::ifstream::binary);
+        bit_file.open(path, std::ifstream::in | std::ifstream::binary);
         if (!bit_file.is_open()) {
             throw std::invalid_argument("Invalid file path or file does not exist");
         }
 
-        std::vector<bool> result();
+        BitContainer result(100000000);
         unsigned char buffer;
+        int j = 0;
         while (bit_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer))) {   //Read a byte from a file and check if end of file is received
             //Read bits from file
             for (int i = 0; i < 8; i++) {
-                bool bit = buffer & (1 << i);
+                result.set(j * 8 + i, buffer & (1 << 7 - i));
             }
+            ++j;
         }
 
         bit_file.close();
+
+        return result;
     }
 }
