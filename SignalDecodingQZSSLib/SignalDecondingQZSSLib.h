@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -6,23 +7,33 @@
 
 namespace Bits
 {
+class BitContainer;
+
+static std::vector<std::size_t> prefixFunction(const BitContainer& pattern);
+static std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer& pattern);
+
+static BitContainer readFileToBC(std::string path);
+static size_t getFileSize(std::string path);
 
 class BitContainer
 {
 private:
-    std::vector<long> bits_;
+    std::vector<long long> bits_;
     std::size_t size_;
 
-    static constexpr int kBitsPerLong = sizeof(long) * 8;
-    static std::size_t NumLongsNeeded(std::size_t num_bits);
+    static constexpr int kBitsPerLongLong = sizeof(long long) * 8;
+    static size_t NumLongsNeeded(std::size_t num_bits);
 
 public:
     BitContainer(std::size_t num_bits);
+    BitContainer(const std::string& str);
+
     std::size_t size() const;
     void set(std::size_t index, bool value);
     bool get(std::size_t index) const;
     void clear();
     void add(std::size_t num_bits);
+    void fromString(const std::string& str);
 };
 
 // KMP
@@ -77,13 +88,18 @@ static std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer
 static BitContainer readFileToBC(std::string path)
 {
     std::ifstream bit_file;
+    size_t file_size = getFileSize(path);
+
     bit_file.open(path, std::ifstream::in | std::ifstream::binary);
     if (!bit_file.is_open())
     {
         throw std::invalid_argument("Invalid file path or file does not exist");
     }
 
-    BitContainer result(100000000);
+    
+    std::cout << "\t" << file_size << std::endl;
+    
+    BitContainer result(file_size);
     unsigned char buffer;
     int j = 0;
     while (bit_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer)))
@@ -91,7 +107,10 @@ static BitContainer readFileToBC(std::string path)
         // Read bits from file
         for (int i = 0; i < 8; i++)
         {
+            bool value = buffer & (1 << 7 - i);
             result.set(j * 8 + i, buffer & (1 << 7 - i));
+            // DEBUG
+            //std::cout << "j * 8 + i = " << j * 8 + i << " \tvalue = " << value << std::endl;
         }
         ++j;
     }
@@ -99,5 +118,18 @@ static BitContainer readFileToBC(std::string path)
     bit_file.close();
 
     return result;
+}
+
+static size_t getFileSize(std::string path)
+{
+    std::ifstream bit_file;
+    bit_file.open(path, std::ifstream::in | std::ifstream::binary | std::ios::ate);
+    if (!bit_file.is_open())
+    {
+        throw std::invalid_argument("Invalid file path or file does not exist");
+    }
+    std::streampos file_size = bit_file.tellg();
+    bit_file.close();
+    return file_size;
 }
 } // namespace Bits
