@@ -114,6 +114,7 @@ static BitContainer readFileToBC(std::string path)
         }
         ++j;
     }
+    //std::cout << "SIZE ===== " << j * 8;
 
     bit_file.close();
 
@@ -130,6 +131,6 @@ static size_t getFileSize(std::string path)
     }
     std::streampos file_size = bit_file.tellg();
     bit_file.close();
-    return file_size;
+    return file_size * 8;
 }
 } // namespace Bits

@@ -13,31 +13,32 @@ using namespace Bits;
 int main()
 {
 
-    //BitContainer bc(10);
-    //bc.fromString("1101011010");
+    // BitContainer bc(10);
+    // bc.fromString("1101011010");
 
-     BitContainer bc = readFileToBC("C:\\files\\lex_2023-03-06.log");
-     BitContainer preamble("11010011");
+    BitContainer bc = readFileToBC("C:\\files\\lex_2023-03-06.log");
+    BitContainer preamble("11010011");
 
     // cout << bc.size();
     // cout << endl;
 
     // DEBUG
 
-    //for (size_t i = 0; i < bc.size(); i++)
+    cout << endl;
+    // for (size_t i = 0; i < bc.size(); i++)
     //{
-    //    if (i % 100 == 0)
-    //    {
-    //        cout << endl;
-    //    }
-    //    cout << bc.get(i);
-    //}
+    //     if (i % 100 == 0)
+    //     {
+    //         cout << endl;
+    //     }
+    //     cout << bc.get(i);
+    // }
 
     std::vector<size_t> preamble_indexes = KMP(bc, preamble);
 
-    // for (size_t i = 0; i < preamble_indexes.size(); i++)
-    //{
-    //     cout << "Index of expected preamle: " << preamble_indexes[i] << endl;
-    // }
+    for (size_t i = 0; i < 100 /*preamble_indexes.size()*/; i++)
+    {
+        cout << "Index of expected preamle: " << preamble_indexes[i] << endl;
+    }
 }
 // 110100110000000011011011111111010
