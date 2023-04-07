@@ -35,6 +35,8 @@ public:
     void add(std::size_t num_bits);
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
+
+    BitContainer operator^(const BitContainer& container) const;
 };
 
 // KMP
@@ -97,7 +99,7 @@ static BitContainer readFileToBC(std::string path)
         throw std::invalid_argument("Invalid file path or file does not exist");
     }
 
-    std::cout << "\t" << file_size << std::endl;
+    std::cout << "File size (in bits):\t" << file_size << std::endl;
 
     BitContainer result(file_size);
     unsigned char buffer;
@@ -134,9 +136,10 @@ static size_t getFileSize(std::string path)
     return file_size * 8;
 }
 
-static bool CheckCRC(BitContainer container, BitContainer polynomial)
+static bool CheckCRC(BitContainer message, BitContainer polynomial)
 {
-
+    size_t difference = message.size() - polynomial.size();
+    polynomial.add(difference);
     return false;
 }
 } // namespace Bits

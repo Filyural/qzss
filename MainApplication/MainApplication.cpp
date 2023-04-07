@@ -19,20 +19,23 @@ int main()
     BitContainer bc = readFileToBC("C:\\files\\lex_2023-03-06.log");
     BitContainer preamble("11010011");
     BitContainer crc_polynomial("1100001100100110011111011");
+
+    BitContainer XOR = preamble ^ crc_polynomial;
     // cout << bc.size();
     // cout << endl;
 
     // DEBUG
 
     cout << endl;
-    //for (size_t i = 13; i < 33; i++)
-    //{
-    //    if (i % 100 == 0)
-    //    {
-    //        cout << endl;
-    //    }
-    //    cout << bc.get(i);
-    //}
+    for (size_t i = 0; i < 25; i++)
+    {
+        if (i % 100 == 0)
+        {
+            cout << endl;
+        }
+        cout << XOR.get(i);
+    }
+    cout << endl;
 
     std::vector<size_t> preamble_indexes = KMP(bc, preamble);
 

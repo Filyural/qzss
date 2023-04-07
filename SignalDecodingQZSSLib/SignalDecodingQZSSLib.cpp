@@ -91,10 +91,42 @@ BitContainer BitContainer::subContainer(size_t start_index, size_t length)
     }
 
     BitContainer result(length);
-        
+
     for (size_t i = 0; i < length; ++i)
     {
         result.set(i, this->get(start_index + i));
+    }
+
+    return result;
+}
+BitContainer BitContainer::operator^(const BitContainer& container) const
+{
+    bool this_smaller = this->size() < container.size();
+    size_t smallest_size = this_smaller ? this->size() : container.size();
+    size_t biggest_size = this_smaller ? container.size() : this->size();
+    BitContainer result(biggest_size);
+
+    //заполняем первые биты, которых нет в меньшем контейнере
+    //битами из бОльшего контейнера
+    if (this_smaller)
+    {
+        for (size_t i = 0; i < biggest_size - smallest_size; i++)
+        {
+            result.set(i, container.get(i));
+        }
+    }
+    else
+    {
+        for (size_t i = 0; i < biggest_size - smallest_size; i++)
+        {
+            result.set(i, this->get(i));
+        }
+    }
+
+    //заполняем остальные биты
+    for (size_t i = 0; i < smallest_size; ++i)
+    {
+        result.set(biggest_size - i - 1, this->get(this->size() - i - 1) ^ container.get(container.size() - i - 1));
     }
 
     return result;
