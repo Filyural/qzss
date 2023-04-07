@@ -83,4 +83,20 @@ void BitContainer::fromString(const std::string& str)
         set(i, str[i] == '1');
     }
 }
+BitContainer BitContainer::subContainer(size_t start_index, size_t length)
+{
+    if (start_index >= size() || length + start_index > size())
+    {
+        throw std::out_of_range("BitContainer::get() out of range");
+    }
+
+    BitContainer result(length);
+        
+    for (size_t i = 0; i < length; ++i)
+    {
+        result.set(i, this->get(start_index + i));
+    }
+
+    return result;
+}
 } // namespace Bits
