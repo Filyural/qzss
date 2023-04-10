@@ -19,6 +19,8 @@ int main()
     BitContainer bc = readFileToBC("C:\\files\\lex_2023-03-06.log");
     BitContainer preamble("11010011");
     BitContainer crc_polynomial("1100001100100110011111011");
+    BitContainer test_sequence("0000001100100110011111011");
+    test_sequence.trimLeadingZeros();
 
     BitContainer XOR = preamble ^ crc_polynomial;
     // cout << bc.size();
@@ -27,13 +29,13 @@ int main()
     // DEBUG
 
     cout << endl;
-    for (size_t i = 0; i < 25; i++)
+    for (size_t i = 0; i < test_sequence.size(); i++)
     {
         if (i % 100 == 0)
         {
             cout << endl;
         }
-        cout << XOR.get(i);
+        cout << test_sequence.get(i);
     }
     cout << endl;
 

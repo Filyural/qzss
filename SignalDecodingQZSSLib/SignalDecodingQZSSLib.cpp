@@ -99,6 +99,31 @@ BitContainer BitContainer::subContainer(size_t start_index, size_t length)
 
     return result;
 }
+
+void BitContainer::trimLeadingZeros()
+{
+    if (get(0))
+    {
+        return;
+    }
+
+    size_t i = 0;
+    bool bit = get(0);
+    while (!bit)
+    {
+        ++i;
+        bit = get(i);
+    }
+
+    for (size_t j = 0; j < size() - i; ++j)
+    {
+        set(j, get(j + i));
+    }
+    
+    bits_.resize(NumLongsNeeded(size() - i));
+    size_ = size() - i;
+}
+
 BitContainer BitContainer::operator^(const BitContainer& container) const
 {
     bool this_smaller = this->size() < container.size();

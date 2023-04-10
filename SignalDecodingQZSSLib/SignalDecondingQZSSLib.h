@@ -35,6 +35,7 @@ public:
     void add(std::size_t num_bits);
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
+    void trimLeadingZeros();
 
     BitContainer operator^(const BitContainer& container) const;
 };
@@ -136,10 +137,22 @@ static size_t getFileSize(std::string path)
     return file_size * 8;
 }
 
-static bool CheckCRC(BitContainer message, BitContainer polynomial)
+static bool CalculateCRC(BitContainer message, BitContainer polynomial)
 {
-    size_t difference = message.size() - polynomial.size();
-    polynomial.add(difference);
+    size_t initial_length = message.size();
+    message.add(polynomial.size() - 1);
+
+    BitContainer sub_message = message.subContainer(0, polynomial.size());
+
+    for (size_t i = 0; i < initial_length; ++i)
+    {
+        sub_message = sub_message ^ polynomial;
+    }
+    //while (difference != 0)
+    //{
+    //    difference = message.size() - polynomial.size();
+    //    polynomial.add(difference);
+    //}
     return false;
 }
 } // namespace Bits
