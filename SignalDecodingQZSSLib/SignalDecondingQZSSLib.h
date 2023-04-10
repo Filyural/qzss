@@ -33,6 +33,7 @@ public:
     bool get(std::size_t index) const;
     void clear();
     void add(std::size_t num_bits);
+    void add(BitContainer sequence);
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
     void trimLeadingZeros();
@@ -137,22 +138,31 @@ static size_t getFileSize(std::string path)
     return file_size * 8;
 }
 
-static bool CalculateCRC(BitContainer message, BitContainer polynomial)
+static BitContainer CalculateCRC(BitContainer message, BitContainer polynomial)
 {
-    size_t initial_length = message.size();
     message.add(polynomial.size() - 1);
+    size_t new_length = message.size();
 
     BitContainer sub_message = message.subContainer(0, polynomial.size());
-
-    for (size_t i = 0; i < initial_length; ++i)
+    
+    size_t size_difference;
+    for (size_t i = polynomial.size();;)
     {
         sub_message = sub_message ^ polynomial;
+        sub_message.trimLeadingZeros();
+        size_difference = polynomial.size() - sub_message.size();
+
+        if (i + size_difference > new_length)
+        {
+            if (i >= new_length)
+            {
+                return sub_message;
+            }
+            sub_message.add(message.subContainer(i, message.size() - i));
+            return sub_message;
+        }
+        sub_message.add(message.subContainer(i, size_difference));
+        i += size_difference;
     }
-    //while (difference != 0)
-    //{
-    //    difference = message.size() - polynomial.size();
-    //    polynomial.add(difference);
-    //}
-    return false;
 }
 } // namespace Bits

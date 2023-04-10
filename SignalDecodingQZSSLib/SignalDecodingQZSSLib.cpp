@@ -74,6 +74,19 @@ void BitContainer::add(std::size_t num_bits)
     }
 }
 
+void BitContainer::add(BitContainer sequence)
+{
+    //можно было вызвать add(size_t), но лучше не заполнять новые позиции сначала нулями, а потом нужными значениями
+    std::size_t num_bits = sequence.size();
+    std::size_t old_size = size_;
+    size_ += num_bits;
+    bits_.resize(NumLongsNeeded(size_));
+    for (size_t i = old_size; i < size_; i++)
+    {
+        set(i, sequence.get(i - old_size));
+    }
+}
+
 void BitContainer::fromString(const std::string& str)
 {
     size_ = str.size();
@@ -112,6 +125,14 @@ void BitContainer::trimLeadingZeros()
     while (!bit)
     {
         ++i;
+        //возможно проверку на нулевую строку стоит вынести в отдельную функцию
+        if (i == size())
+        {
+            bits_.resize(NumLongsNeeded(0));
+            size_ = 0;
+            return;
+        }
+
         bit = get(i);
     }
 
