@@ -140,9 +140,55 @@ void BitContainer::trimLeadingZeros()
     {
         set(j, get(j + i));
     }
-    
+
     bits_.resize(NumLongsNeeded(size() - i));
     size_ = size() - i;
+}
+void BitContainer::show(size_t num_bits) const
+{
+    for (size_t i = 0; i < num_bits; i++)
+    {
+        if (i % 100 == 0)
+        {
+            std::cout << std::endl;
+        }
+        std::cout << get(i);
+    }
+    std::cout << std::endl;
+}
+
+bool BitContainer::equals(BitContainer& sequence)
+{
+    size_t i = 0, j = 0;
+    bool bit = get(i);
+    while (!bit)
+    {
+        ++i;
+        if (i == size())
+        {
+            break;
+        }
+        bit = get(i);
+    }
+    bit = sequence.get(j);
+    while (!bit)
+    {
+        ++j;
+        if (j == sequence.size())
+        {
+            break;
+        }
+        bit = sequence.get(j);
+    }
+    if (i == size() && j == sequence.size())
+    {
+        return true;
+    }
+    else if (i == size() || j == sequence.size())
+    {
+        return false;
+    }
+    return subContainer(i, this->size() - i) == sequence.subContainer(j, sequence.size() - j);
 }
 
 BitContainer BitContainer::operator^(const BitContainer& container) const
@@ -177,4 +223,21 @@ BitContainer BitContainer::operator^(const BitContainer& container) const
 
     return result;
 }
+
+bool BitContainer::operator==(const BitContainer& container) const
+{
+    if (size() != container.size())
+    {
+        return false;
+    }
+    for (size_t i = 0; i < size(); i++)
+    {
+        if (get(i) != container.get(i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 } // namespace Bits

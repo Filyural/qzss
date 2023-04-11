@@ -37,8 +37,11 @@ public:
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
     void trimLeadingZeros();
+    void show(size_t num_bits) const;
+    bool equals(BitContainer& sequence);
 
     BitContainer operator^(const BitContainer& container) const;
+    bool operator==(const BitContainer& container) const;
 };
 
 // KMP
@@ -164,5 +167,14 @@ static BitContainer CalculateCRC(BitContainer message, BitContainer polynomial)
         sub_message.add(message.subContainer(i, size_difference));
         i += size_difference;
     }
+}
+
+static bool CheckCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index)
+{
+    BitContainer message = sequence.subContainer(0, crc_index);
+    BitContainer crc = sequence.subContainer(crc_index, sequence.size() - crc_index);
+
+    BitContainer crc_calc = CalculateCRC(message, polynomial);
+    return crc == crc_calc;
 }
 } // namespace Bits
