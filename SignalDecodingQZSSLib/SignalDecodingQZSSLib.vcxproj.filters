@@ -24,12 +24,18 @@
     <ClInclude Include="SignalDecondingQZSSLib.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="SubTypeOne.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SignalDecodingQZSSLib.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="SubTypeOne.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

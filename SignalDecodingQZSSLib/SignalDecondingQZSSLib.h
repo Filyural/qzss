@@ -10,12 +10,12 @@ namespace Bits
 class BitContainer;
 
 //KMP
-static std::vector<std::size_t> prefixFunction(const BitContainer& pattern);
-static std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer& pattern);
+std::vector<std::size_t> prefixFunction(const BitContainer& pattern);
+std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer& pattern);
 
 //read file
-static BitContainer readFileToBC(std::string path);
-static size_t getFileSize(std::string path);
+BitContainer readFileToBC(std::string path);
+size_t getFileSize(std::string path);
 
 //CRC
 BitContainer CalculateCRC(BitContainer message, BitContainer polynomial);
