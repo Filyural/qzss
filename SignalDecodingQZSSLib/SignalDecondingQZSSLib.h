@@ -44,6 +44,8 @@ public:
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
     BitContainer toLength(size_t length);
+    unsigned int getNum(size_t start_index, size_t length);
+    unsigned int getNum();
     void trimLeadingZeros();
     void show(size_t num_bits) const;
     bool equals(BitContainer& sequence);

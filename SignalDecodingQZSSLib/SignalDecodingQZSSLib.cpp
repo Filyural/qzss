@@ -128,6 +128,25 @@ BitContainer BitContainer::toLength(size_t length)
     return subContainer(0, length);
 }
 
+unsigned int BitContainer::getNum(size_t start_index, size_t length)
+{
+    if (start_index + length >= size())
+    {
+        throw std::out_of_range("BitContainer::getNum() out of range"); 
+    }
+    unsigned int result = 0;
+    for (size_t i = start_index; i < start_index + length; i++)
+    {
+        result += get(i) * pow(2, (length - i - 1));
+    }
+    return result;
+}
+
+unsigned int BitContainer::getNum()
+{
+    return getNum(0, size());
+}
+
 void BitContainer::trimLeadingZeros()
 {
     if (get(0))

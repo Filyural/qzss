@@ -18,6 +18,8 @@ int main()
     BitContainer bc = readFileToBC("C:\\files\\lex_2023-03-06.log");
     BitContainer preamble("11010011");
     BitContainer crc_polynomial("1100001100100110011111011");
+
+    cout << crc_polynomial.getNum() << endl;
     // BitContainer test_sequence("1001001110010");
     // BitContainer test_crc_polynomial("10111");
     // BitContainer test_sequence = bc.subContainer(5400, 1776);
@@ -32,9 +34,12 @@ int main()
     std::vector<size_t> checked_preambles(0);
     size_t preamble_index;
 
+
+    //здесь проверка CRC (можно указать любое число до preamble_indexes.size() ~ 8000)
     try
     {
-
+        //try временно нужен, чтобы обработать последний найденный индекс (если он окажется ближе к концу, чем 1800 бит)
+        //тогда вылетает исключение, потому что мы пытаемся взять subContainer от нашего сообщения, где правая граница выходит за само сообщение
         for (size_t i = 0; i < 1000/*preamble_indexes.size()*/; ++i)
         {
             preamble_index = preamble_indexes[i];
@@ -55,16 +60,16 @@ int main()
 
     for (size_t i = 0; i < checked_preambles.size(); i++)
     {
-        size_t message_begin_index = checked_preambles[i] + 81;
-        BitContainer message_number = bc.subContainer(message_begin_index, 12);
+        size_t message_begin_index = checked_preambles[i] + 81;                     //начинается dataPart
+        BitContainer message_number = bc.subContainer(message_begin_index, 12);     //message_number у subType'ов должен быть 4073
         if (message_number == BitContainer("111111101001"))
         {
-            bc.subContainer(message_begin_index + 12, 4).show(4);
+            bc.subContainer(message_begin_index + 12, 4).show(4);                   //покажем 4 бита - message sub type
 
         }
         else
         {
-            cout << "++++" << endl;
+            cout << "++++" << endl;                                                 //если это не начало сообщения, то выведет ++++
         }
     }
 }
