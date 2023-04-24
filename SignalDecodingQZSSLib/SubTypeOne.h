@@ -30,4 +30,6 @@ public:
 
     Bits::BitContainer getMessage();
     std::vector<GNSS_Mask> getGNSSes();
+
+    void showInfo();
 };

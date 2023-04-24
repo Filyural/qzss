@@ -130,7 +130,7 @@ BitContainer BitContainer::toLength(size_t length)
 
 unsigned int BitContainer::getNum(size_t start_index, size_t length)
 {
-    if (start_index + length >= size())
+    if (start_index + length > size())
     {
         throw std::out_of_range("BitContainer::getNum() out of range"); 
     }

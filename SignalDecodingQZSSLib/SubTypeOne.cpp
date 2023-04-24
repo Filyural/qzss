@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "SubTypeOne.h"
-#include "SignalDecondingQZSSLib.h"
 
 SubTypeOne::SubTypeOne(Bits::BitContainer& message_) : message{message_}
 {
@@ -27,4 +25,17 @@ Bits::BitContainer SubTypeOne::getMessage()
 std::vector<GNSS_Mask> SubTypeOne::getGNSSes()
 {
     return GNSSes;
+}
+
+void SubTypeOne::showInfo()
+{
+    std::cout << "================= MESSAGE SUBTYPE 1 =================" << std::endl;
+    std::cout << "GPS epoch time:\t" << GPS_epoch_time << std::endl;
+    std::cout << "SSR update interval:\t" << ssr_update_interval << std::endl;
+    std::cout << "Multiple message indicator:\t" << multiple_message_indicator << std::endl;
+    std::cout << "IOD:\t" << IOD << std::endl;
+    std::cout << "Number of GNSS:\t" << number_of_GNSS << std::endl;
+    //TODO
+
+    std::cout << "================= MESSAGE END =================" << std::endl << std::endl;
 }
