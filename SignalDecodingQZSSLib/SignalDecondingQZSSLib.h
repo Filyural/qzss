@@ -18,8 +18,11 @@ BitContainer readFileToBC(std::string path);
 size_t getFileSize(std::string path);
 
 //CRC
-BitContainer CalculateCRC(BitContainer message, BitContainer polynomial);
-bool CheckCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index);
+BitContainer calculateCRC(BitContainer message, BitContainer polynomial);
+bool checkCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index);
+
+//QZSS
+bool getHeaderInfo(BitContainer message);
 
 //Container class
 class BitContainer

@@ -378,7 +378,7 @@ size_t getFileSize(std::string path)
     return file_size * 8;
 }
 
-BitContainer CalculateCRC(BitContainer message, BitContainer polynomial)
+BitContainer calculateCRC(BitContainer message, BitContainer polynomial)
 {
     message.add(polynomial.size() - 1);
     size_t new_length = message.size();
@@ -406,13 +406,18 @@ BitContainer CalculateCRC(BitContainer message, BitContainer polynomial)
     }
 }
 
-bool CheckCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index)
+bool checkCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index)
 {
     BitContainer message = sequence.subContainer(0, crc_index);
     BitContainer crc = sequence.subContainer(crc_index, sequence.size() - crc_index);
 
-    BitContainer crc_calc = CalculateCRC(message, polynomial);
+    BitContainer crc_calc = calculateCRC(message, polynomial);
     return crc == (crc_calc);
 }
 
+bool getHeaderInfo(BitContainer message)
+{
+    //TODO
+    return false;
+}
 } // namespace Bits

@@ -40,7 +40,8 @@ int main()
         {
             break;
         }
-        if (CheckCRC(bc.subContainer(preamble_index, FULL_MESSAGE_LENGTH), crc_polynomial, MESSAGE_LENGTH))
+        Bits::BitContainer probable_message = bc.subContainer(preamble_index, FULL_MESSAGE_LENGTH);
+        if (checkCRC(probable_message, crc_polynomial, MESSAGE_LENGTH))
         {
             checked_preambles.push_back(preamble_index);
         }
@@ -52,14 +53,19 @@ int main()
 
     for (size_t i = 0; i < checked_preambles.size(); i++)
     {
+        // check is it MADOCA
+        if (bc.subContainer(checked_preambles[i], 3) == Bits::BitContainer("010"))
+        {
+        }
         size_t message_begin_index = checked_preambles[i] + 81;                       //начинается dataPart
         Bits::BitContainer message_number = bc.subContainer(message_begin_index, 12); // message_number у subType'ов должен быть 4073
-        if (message_number == Bits::BitContainer("111111101001"))
+        if (message_number == Bits::BitContainer("111111101001") )
         {
             char message_subtype = bc.subContainer(message_begin_index + 12, 4).getNum(); //покажем 4 бита - message sub type
             if (message_subtype == 1)
             {
                 Bits::BitContainer message_one = bc.subContainer(message_begin_index, 1695);
+                message_one.show(message_one.size());
                 SubTypeOne message_type_one(message_one);
                 message_type_one.showInfo();
             }
