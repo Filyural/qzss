@@ -5,3 +5,4 @@
 
 #include "SignalDecondingQZSSLib.h";
 #include "SubTypeOne.h"
+#include "HeaderRTCM.h"

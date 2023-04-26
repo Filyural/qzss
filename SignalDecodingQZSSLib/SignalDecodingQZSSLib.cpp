@@ -137,7 +137,7 @@ unsigned int BitContainer::getNum(size_t start_index, size_t length)
     unsigned int result = 0;
     for (size_t i = start_index; i < start_index + length; i++)
     {
-        result += get(i) * pow(2, (length - i - 1));
+        result += get(i) * pow(2, (start_index + length - i - 1));
     }
     return result;
 }
@@ -180,6 +180,10 @@ void BitContainer::trimLeadingZeros()
 }
 void BitContainer::show(size_t num_bits) const
 {
+    if (num_bits > size())
+    {
+        throw std::out_of_range("BitContainer::show() out of range"); 
+    }
     for (size_t i = 0; i < num_bits; i++)
     {
         if (i % 100 == 0)
@@ -189,6 +193,11 @@ void BitContainer::show(size_t num_bits) const
         std::cout << get(i);
     }
     std::cout << std::endl;
+}
+
+void BitContainer::show() const
+{
+    show(size());
 }
 
 bool BitContainer::equals(BitContainer& sequence)

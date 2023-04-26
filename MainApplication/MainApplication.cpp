@@ -17,22 +17,11 @@ int main()
     Bits::BitContainer preamble("11010011");
     Bits::BitContainer crc_polynomial("1100001100100110011111011");
 
-    cout << crc_polynomial.getNum() << endl;
-    // BitContainer test_sequence("1001001110010");
-    // BitContainer test_crc_polynomial("10111");
-    // BitContainer test_sequence = bc.subContainer(5400, 1776);
-    // BitContainer test_crc_polynomial("1100001100100110011111011");
-    // BitContainer test_result = CalculateCRC(test_sequence, test_crc_polynomial);
-    // test_result.show(test_result.size());
-    //  DEBUG
-
-    // cout << ((CheckCRC(bc.subContainer(5400, 1800), crc_polynomial, MESSAGE_LENGTH)) ? "True" : "False") << endl;
-
     std::vector<size_t> preamble_indexes = KMP(bc, preamble);
     std::vector<size_t> checked_preambles(0);
     size_t preamble_index;
 
-    //здесь проверка CRC (можно указать любое число до preamble_indexes.size() ~ 8000)
+    //здесь проверка CRC (можно указать любое число до preamble_indexes.size() ~ 8000+)
     for (size_t i = 0; i < 1000 /*preamble_indexes.size()*/; ++i)
     {
         preamble_index = preamble_indexes[i];
@@ -53,30 +42,52 @@ int main()
 
     for (size_t i = 0; i < checked_preambles.size(); i++)
     {
-        // check is it MADOCA
-        if (bc.subContainer(checked_preambles[i], 3) == Bits::BitContainer("010"))
+
+        size_t message_begin_index = checked_preambles[i];
+
+        //bc.subContainer(message_begin_index, 81).show(81);
+        //cout << "[------][----][--------][----------][--][------------------][--][------][------]|" << endl;
+
+        size_t data_begin_index = message_begin_index + 81; //начинается dataPart
+
+        Bits::BitContainer header_part = bc.subContainer(message_begin_index, 81);
+        HeaderRTCM header_RTCM(header_part);
+
+        //можно закомментировать, тогда будет выводиться информация о хедерах по CLAS и QZNMA
+        if (header_RTCM.getMessageType().vendor_ID != 2)
         {
+            continue;
         }
-        size_t message_begin_index = checked_preambles[i] + 81;                       //начинается dataPart
-        Bits::BitContainer message_number = bc.subContainer(message_begin_index, 12); // message_number у subType'ов должен быть 4073
-        if (message_number == Bits::BitContainer("111111101001") )
+
+        header_RTCM.showInfo();
+        Bits::BitContainer message_number = bc.subContainer(data_begin_index, 12); // message_number у subType'ов должен быть 4073
+        if (header_RTCM.getMessageType().vendor_ID == 2)
         {
-            char message_subtype = bc.subContainer(message_begin_index + 12, 4).getNum(); //покажем 4 бита - message sub type
-            if (message_subtype == 1)
+            if (message_number == Bits::BitContainer("111111101001"))
             {
-                Bits::BitContainer message_one = bc.subContainer(message_begin_index, 1695);
-                message_one.show(message_one.size());
-                SubTypeOne message_type_one(message_one);
-                message_type_one.showInfo();
+                char message_subtype = bc.subContainer(data_begin_index + 12, 4).getNum(); //покажем 4 бита - message sub type
+                if (message_subtype == 1)
+                {
+                    Bits::BitContainer message_one = bc.subContainer(data_begin_index, 1695);
+                    // message_one.show(message_one.size());
+                    SubTypeOne message_type_one(message_one);
+                    message_type_one.showInfo();
+                }
+                else
+                {
+                    std::cout << "=================================== SUBTYPE " << (int)message_subtype
+                              << " ===================================" << std::endl;
+                    std::cout << "================================= SUBTYPE " << (int)message_subtype
+                              << " END =================================" << std::endl
+                              << std::endl;
+                }
             }
             else
             {
-                cout << "Message subtype:" << (int)message_subtype << endl;
+                //если это не начало сообщения, то выведет ++++
+                //но это можно проверить в через RTCM header -> message_type -> subframe_indicator
+                cout << "++++" << endl << endl;
             }
-        }
-        else
-        {
-            cout << "++++" << endl; //если это не начало сообщения, то выведет ++++
         }
     }
 }

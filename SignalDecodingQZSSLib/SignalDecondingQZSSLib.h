@@ -51,6 +51,7 @@ public:
     unsigned int getNum();
     void trimLeadingZeros();
     void show(size_t num_bits) const;
+    void show() const;
     bool equals(BitContainer& sequence);
     std::string toString();
 

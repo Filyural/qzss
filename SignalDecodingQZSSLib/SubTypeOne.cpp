@@ -11,9 +11,9 @@ SubTypeOne::SubTypeOne(Bits::BitContainer& message_) : message{message_}
     for (size_t i = 0; i < number_of_GNSS; i++)
     {
 
-        //BitContainer gnss_bits = message_.subContainer(index, )
-        //GNSS_Mask gnss = ;
-        //GNSSes.push_back();
+        // BitContainer gnss_bits = message_.subContainer(index, )
+        // GNSS_Mask gnss = ;
+        // GNSSes.push_back();
     }
 }
 
@@ -29,13 +29,15 @@ std::vector<GNSS_Mask> SubTypeOne::getGNSSes()
 
 void SubTypeOne::showInfo()
 {
-    std::cout << "================= MESSAGE SUBTYPE 1 =================" << std::endl;
+    std::cout << "=================================== SUBTYPE 1 ===================================" << std::endl;
     std::cout << "GPS epoch time:\t" << GPS_epoch_time << std::endl;
     std::cout << "SSR update interval:\t" << ssr_update_interval << std::endl;
     std::cout << "Multiple message indicator:\t" << multiple_message_indicator << std::endl;
     std::cout << "IOD:\t" << IOD << std::endl;
     std::cout << "Number of GNSS:\t" << number_of_GNSS << std::endl;
-    //TODO
+    
+    // TODO
+    std::cout << "GNSSes TBD" << std::endl;
 
-    std::cout << "================= MESSAGE END =================" << std::endl << std::endl;
+    std::cout << "================================= SUBTYPE 1 END =================================" << std::endl << std::endl;
 }

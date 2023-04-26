@@ -1,0 +1,25 @@
+#include "pch.h"
+#include "HeaderRTCM.h"
+
+HeaderRTCM::HeaderRTCM(Bits::BitContainer message) : bits{message}
+{
+    time_of_week = message.subContainer(40, 20).getNum();
+    correction_error_bits = message.subContainer(60, 4).getNum();
+    PRN = message.subContainer(64, 8).getNum();
+    message_type = {message.get(79), message.get(78), message.get(77), 
+        static_cast<unsigned short>(message.getNum(75, 2)),
+        static_cast<unsigned short>(message.getNum(72, 3))};
+    alert_flag = message.get(80);
+}
+
+void HeaderRTCM::showInfo()
+{
+    std::cout << "===================================RTCM header===================================" << std::endl;
+    std::cout << "Time of week:\t\t\t\t" << time_of_week << std::endl;
+    std::cout << "Number of correction error bits:\t" << correction_error_bits << std::endl;
+    std::cout << "PRN:\t\t\t\t\t" << PRN << std::endl;
+    std::cout << "Message type:" << std::endl;
+    message_type.showInfo();
+    std::cout << "Alert flag:\t\t\t\t" << alert_flag << std::endl;
+    std::cout << "=================================RTCM header END=================================" << std::endl;
+}
