@@ -4,5 +4,6 @@
 
 
 #include "SignalDecondingQZSSLib.h";
+#include "BitContainer.h"
 #include "SubTypeOne.h"
 #include "HeaderRTCM.h"

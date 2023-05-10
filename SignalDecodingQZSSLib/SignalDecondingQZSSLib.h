@@ -5,57 +5,20 @@
 #include <fstream>
 #include <stdexcept>
 
-namespace Bits
-{
 class BitContainer;
 
-//KMP
+// KMP
 std::vector<std::size_t> prefixFunction(const BitContainer& pattern);
 std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer& pattern);
+bool KMP(const BitContainer& text, const BitContainer& pattern, size_t& index);
 
-//read file
-BitContainer readFileToBC(std::string path);
+// read file
+BitContainer readFileToBC(std::string path, size_t& message);
 size_t getFileSize(std::string path);
 
-//CRC
+// CRC
 BitContainer calculateCRC(BitContainer message, BitContainer polynomial);
 bool checkCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index);
 
-//QZSS
+// QZSS
 bool getHeaderInfo(BitContainer message);
-
-//Container class
-class BitContainer
-{
-private:
-    std::vector<long long> bits_;
-    std::size_t size_;
-
-    static constexpr int kBitsPerLongLong = sizeof(long long) * 8;
-    static size_t NumLongsNeeded(std::size_t num_bits);
-
-public:
-    BitContainer(std::size_t num_bits);
-    BitContainer(const std::string& str);
-
-    std::size_t size() const;
-    void set(std::size_t index, bool value);
-    bool get(std::size_t index) const;
-    void clear();
-    void add(std::size_t num_bits);
-    void add(BitContainer sequence);
-    void fromString(const std::string& str);
-    BitContainer subContainer(size_t start_index, size_t length);
-    BitContainer toLength(size_t length);
-    unsigned int getNum(size_t start_index, size_t length);
-    unsigned int getNum();
-    void trimLeadingZeros();
-    void show(size_t num_bits) const;
-    void show() const;
-    bool equals(BitContainer& sequence);
-    std::string toString();
-
-    BitContainer operator^(const BitContainer& container) const;
-    bool operator==(const BitContainer& container) const;
-};
-} // namespace Bits

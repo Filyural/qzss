@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "HeaderRTCM.h"
 
-HeaderRTCM::HeaderRTCM(Bits::BitContainer message) : bits{message}
+HeaderRTCM::HeaderRTCM(BitContainer message) : bits{message}
 {
     time_of_week = message.subContainer(40, 20).getNum();
     correction_error_bits = message.subContainer(60, 4).getNum();
@@ -12,14 +12,15 @@ HeaderRTCM::HeaderRTCM(Bits::BitContainer message) : bits{message}
     alert_flag = message.get(80);
 }
 
-void HeaderRTCM::showInfo()
+std::string HeaderRTCM::getInfo()
 {
-    std::cout << "===================================RTCM header===================================" << std::endl;
-    std::cout << "Time of week:\t\t\t\t" << time_of_week << std::endl;
-    std::cout << "Number of correction error bits:\t" << correction_error_bits << std::endl;
-    std::cout << "PRN:\t\t\t\t\t" << PRN << std::endl;
-    std::cout << "Message type:" << std::endl;
-    message_type.showInfo();
-    std::cout << "Alert flag:\t\t\t\t" << alert_flag << std::endl;
-    std::cout << "=================================RTCM header END=================================" << std::endl;
+    std::string result;
+    result += "===================================RTCM header===================================\n";
+    result += "Time of week:\t\t\t\t" + std::to_string(time_of_week) + "\n";
+    result += "Number of correction error bits:\t" + std::to_string(correction_error_bits) + "\n";
+    result += "PRN:\t\t\t\t\t" + std::to_string(PRN) + "\n";
+    result += "Message type:\n";
+    result += message_type.getInfo();
+    result += "Alert flag:\t\t\t\t" + std::to_string(alert_flag) + "\n";
+    result += "=================================RTCM header END=================================\n";
 }

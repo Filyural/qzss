@@ -6,16 +6,16 @@ class BitContainer;
 struct GNSS_Mask
 {
     unsigned char gnss_id;
-    Bits::BitContainer sattelite_mask;
-    Bits::BitContainer signal_mask;
+    BitContainer sattelite_mask;
+    BitContainer signal_mask;
     bool mask_availability;
-    Bits::BitContainer cell_mask;
+    BitContainer cell_mask;
 };
 
 class SubTypeOne
 {
 private:
-    Bits::BitContainer& message;
+    BitContainer& message;
     static constexpr size_t indexes[7] = {0, 12, 16, 36, 40, 41, 45};
     static constexpr size_t sizes[7] = {12, 4, 20, 4, 1, 4, 4};
     unsigned int GPS_epoch_time;
@@ -26,10 +26,10 @@ private:
     std::vector<GNSS_Mask> GNSSes;
 
 public:
-    SubTypeOne(Bits::BitContainer& message_);
+    SubTypeOne(BitContainer& message_);
 
-    Bits::BitContainer getMessage();
+    BitContainer getMessage();
     std::vector<GNSS_Mask> getGNSSes();
 
-    void showInfo();
+    std::string getInfo();
 };

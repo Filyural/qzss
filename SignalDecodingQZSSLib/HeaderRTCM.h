@@ -8,43 +8,45 @@ struct MessageType
     unsigned short message_generation_facility_ID;
     unsigned int vendor_ID;
 
-    void showInfo()
+    std::string getInfo()
     {
-        std::cout << "|\tSubframe_indicator:\t\t\t\t"
-                  << (subframe_indicator ? "First data part of a subframe." : "Another data part of a subframe.") << std::endl;
-        std::cout << "|\tApplicable navigation message extension:\t" << applicable_nav_mess_extension << std::endl;
-        std::cout << "|\tCorrection Service ID:\t\t\t\t"
-                  << (correction_service_ID ? "Clock/Ephemeris Corrections" : "Ionospheric Corrections") << std::endl;
+        std::string result;
+        result += "|\tSubframe_indicator:\t\t\t\t" +
+                  + subframe_indicator ? "First data part of a subframe.\n" : "Another data part of a subframe.\n";
+        result += "|\tApplicable navigation message extension:\t" + std::to_string(applicable_nav_mess_extension) + "\n";
+        result += "|\tCorrection Service ID:\t\t\t\t"
+                  + correction_service_ID ? "Clock/Ephemeris Corrections\n" : "Ionospheric Corrections\n";
         switch (message_generation_facility_ID)
         {
         case 0:
         case 1:
-            std::cout << "|\tMessage generation facility ID:\t\t\tHitachi-Ota" << std::endl;
+            result += "|\tMessage generation facility ID:\t\t\tHitachi-Ota\n";
             break;
         case 2:
         case 3:
-            std::cout << "|\tMessage generation facility ID:\t\t\tKobe" << std::endl;
+            result += "|\tMessage generation facility ID:\t\t\tKobe\n";
             break;
         default:
             break;
         }
 
-        std::cout << "|\tVendor ID:\t\t\t\t\t";
+        result += "|\tVendor ID:\t\t\t\t\t";
         switch (vendor_ID)
         {
         case 5:
-            std::cout << "CLAS." << std ::endl;
+            result += "CLAS.\n";
             break;
         case 2:
-            std::cout << "MADOCA-PPP." << std ::endl;
+            result += "MADOCA-PPP.\n";
             break;
         case 3:
-            std::cout << "QZNMA." << std ::endl;
+            result += "QZNMA.\n";
             break;
         default:
-            std::cout << "Reserved:\t" << vendor_ID << std ::endl;
+            result += "Reserved:\t" + std::to_string(vendor_ID) + "\n";
             break;
         }
+        return result;
     }
 };
 
@@ -52,7 +54,7 @@ class HeaderRTCM
 {
 
 private:
-    Bits::BitContainer bits;
+    BitContainer bits;
     unsigned int time_of_week;
     unsigned short correction_error_bits;
     unsigned short PRN;
@@ -60,7 +62,7 @@ private:
     bool alert_flag;
 
 public:
-    HeaderRTCM(Bits::BitContainer message);
+    HeaderRTCM(BitContainer message);
 
     unsigned int getTimeOfWeek()
     {
@@ -82,7 +84,7 @@ public:
     {
         return alert_flag;
     }
-    void showInfo();
+    std::string getInfo();
     // std::string getStringTOW();
     // std::string getStringCEB();
     // std::string getStringPRN();

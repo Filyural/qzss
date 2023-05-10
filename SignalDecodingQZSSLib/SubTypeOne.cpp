@@ -1,6 +1,6 @@
 #include "pch.h"
 
-SubTypeOne::SubTypeOne(Bits::BitContainer& message_) : message{message_}
+SubTypeOne::SubTypeOne(BitContainer& message_) : message{message_}
 {
     GPS_epoch_time = message_.subContainer(16, 20).getNum();
     ssr_update_interval = message_.subContainer(36, 4).getNum();
@@ -17,7 +17,7 @@ SubTypeOne::SubTypeOne(Bits::BitContainer& message_) : message{message_}
     }
 }
 
-Bits::BitContainer SubTypeOne::getMessage()
+BitContainer SubTypeOne::getMessage()
 {
     return message;
 }
@@ -27,17 +27,20 @@ std::vector<GNSS_Mask> SubTypeOne::getGNSSes()
     return GNSSes;
 }
 
-void SubTypeOne::showInfo()
+std::string SubTypeOne::getInfo()
 {
-    std::cout << "=================================== SUBTYPE 1 ===================================" << std::endl;
-    std::cout << "GPS epoch time:\t" << GPS_epoch_time << std::endl;
-    std::cout << "SSR update interval:\t" << ssr_update_interval << std::endl;
-    std::cout << "Multiple message indicator:\t" << multiple_message_indicator << std::endl;
-    std::cout << "IOD:\t" << IOD << std::endl;
-    std::cout << "Number of GNSS:\t" << number_of_GNSS << std::endl;
+    std::string result;
+    result += "=================================== SUBTYPE 1 ===================================\n";
+    result += "GPS epoch time:\t" + std::to_string(GPS_epoch_time) + "\n";
+    result += "SSR update interval:\t" + std::to_string(ssr_update_interval) + "\n";
+    result += "Multiple message indicator:\t" + std::to_string(multiple_message_indicator) + "\n";
+    result += "IOD:\t" + std::to_string(IOD) + "\n";
+    result += "Number of GNSS:\t" + std::to_string(number_of_GNSS) + "\n";
     
     // TODO
-    std::cout << "GNSSes TBD" << std::endl;
+    //std::cout << "GNSSes TBD" << std::endl;
 
-    std::cout << "================================= SUBTYPE 1 END =================================" << std::endl << std::endl;
+    //std::cout << "================================= SUBTYPE 1 END =================================" << std::endl << std::endl;
+
+    return result;
 }
