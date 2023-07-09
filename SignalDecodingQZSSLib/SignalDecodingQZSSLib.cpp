@@ -51,7 +51,6 @@ std::vector<std::size_t> KMP(const BitContainer& text, const BitContainer& patte
 
 bool KMP(const BitContainer& text, const BitContainer& pattern, size_t& index)
 {
-    size_t index;
     std::size_t n = text.size();
     std::size_t m = pattern.size();
     auto pi = prefixFunction(pattern);

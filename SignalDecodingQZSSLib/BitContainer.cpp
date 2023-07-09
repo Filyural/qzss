@@ -130,6 +130,8 @@ unsigned int BitContainer::getNum(size_t start_index, size_t length)
         throw std::out_of_range("BitContainer::getNum() out of range");
     }
     unsigned int result = 0;
+    //todo переделать чтобы получать число через сдвиг
+
     for (size_t i = start_index; i < start_index + length; i++)
     {
         result += get(i) * pow(2, (start_index + length - i - 1));

@@ -10,12 +10,12 @@ struct MessageType
 
     std::string getInfo()
     {
-        std::string result;
-        result += "|\tSubframe_indicator:\t\t\t\t" +
-                  + subframe_indicator ? "First data part of a subframe.\n" : "Another data part of a subframe.\n";
+        std::string result = "";
+        std::string tmp = (subframe_indicator ? "First data part of a subframe.\n" : "Another data part of a subframe.\n");
+        result += "|\tSubframe_indicator:\t\t\t\t" + tmp;
         result += "|\tApplicable navigation message extension:\t" + std::to_string(applicable_nav_mess_extension) + "\n";
-        result += "|\tCorrection Service ID:\t\t\t\t"
-                  + correction_service_ID ? "Clock/Ephemeris Corrections\n" : "Ionospheric Corrections\n";
+        tmp = correction_service_ID ? "Clock/Ephemeris Corrections\n" : "Ionospheric Corrections\n";
+        result += "|\tCorrection Service ID:\t\t\t\t" + tmp;
         switch (message_generation_facility_ID)
         {
         case 0:
@@ -43,7 +43,8 @@ struct MessageType
             result += "QZNMA.\n";
             break;
         default:
-            result += "Reserved:\t" + std::to_string(vendor_ID) + "\n";
+            tmp = std::to_string(vendor_ID);
+            result += "Reserved:\t" + tmp + "\n";
             break;
         }
         return result;

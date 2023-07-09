@@ -23,4 +23,5 @@ std::string HeaderRTCM::getInfo()
     result += message_type.getInfo();
     result += "Alert flag:\t\t\t\t" + std::to_string(alert_flag) + "\n";
     result += "=================================RTCM header END=================================\n";
+    return result;
 }
