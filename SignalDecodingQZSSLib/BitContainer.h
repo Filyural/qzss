@@ -10,7 +10,9 @@ private:
     static size_t NumLongsNeeded(std::size_t num_bits);
 
 public:
-    BitContainer(std::size_t num_bits);
+    BitContainer();
+    BitContainer(const BitContainer& container);
+    BitContainer(const std::size_t num_bits);
     BitContainer(const std::string& str);
 
     std::size_t size() const;
@@ -22,14 +24,13 @@ public:
     void fromString(const std::string& str);
     BitContainer subContainer(size_t start_index, size_t length);
     BitContainer toLength(size_t length);
-    unsigned int getNum(size_t start_index, size_t length);
-    unsigned int getNum();
+    long long getNum(size_t start_index, size_t length);
     void trimLeadingZeros();
     std::string getInfo(size_t num_bits) const;
-    std::string getInfo() const;
     bool equals(BitContainer& sequence);
     std::string toString();
 
+    BitContainer& operator=(const BitContainer& container);
     BitContainer operator^(const BitContainer& container) const;
     bool operator==(const BitContainer& container) const;
 };
