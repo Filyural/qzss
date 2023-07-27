@@ -193,17 +193,11 @@ long long BitContainer::getNum(size_t start_index, size_t length)
     {
         throw std::out_of_range("BitContainer::getNum() out of range");
     }
-    long long result = 0;
-    size_t prefix_length = NumLongsNeeded(start_index) * kBitsPerLongLong - start_index;
-    size_t postfix_length = kBitsPerLongLong - prefix_length;
 
-    // todo переделать чтобы получать число через сдвиг
-    //TODO
-
-    for (size_t i = start_index; i < start_index + length; i++)
-    {
-        result += get(i) * pow(2, (start_index + length - i - 1));
-    }
+    size_t long_index = NumLongsNeeded(start_index + 1);
+    size_t shift = start_index % kBitsPerLongLong;
+    long long result = (bits_[long_index] << shift) & (bits_[long_index + 1] >> (kBitsPerLongLong - shift));
+    result >>= kBitsPerLongLong - length;
     return result;
 }
 
@@ -358,7 +352,7 @@ BitContainer BitContainer::operator^(const BitContainer& container) const
 }
 
 /*
-* ѕровер€ет сравнивает два контейнера на полное равенство (включа€ длину и не отбрасывает начальные нули)
+* —равнивает два контейнера на полное равенство (включа€ длину и не отбрасывает начальные нули)
 * -------------------------------------------------------------------------------------------------------
 * Tests compares two containers for complete equality (including length and does not discard leading zeros)
 */
