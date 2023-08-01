@@ -2,20 +2,20 @@
 #include "BitContainer.h"
 
 /*
-* Конструктор по умолчанию
-* ------------------------
-* Default constructor
-*/
+ * Конструктор по умолчанию
+ * ------------------------
+ * Default constructor
+ */
 BitContainer::BitContainer() : size_{0}
 {
     bits_.resize(0);
 }
 
 /*
-* Конструктор копирования
-* -----------------------
-* Copy constructor
-*/
+ * Конструктор копирования
+ * -----------------------
+ * Copy constructor
+ */
 BitContainer::BitContainer(const BitContainer& container)
 {
     bits_ = container.bits_;
@@ -23,50 +23,51 @@ BitContainer::BitContainer(const BitContainer& container)
 }
 
 /*
-* Конструктор для инициализации контейнера размером <num_bits> бит
-* ----------------------------------------------------------------
-* Constructor to initialize a container of size <num_bits> bits
-*/
+ * Конструктор для инициализации контейнера размером <num_bits> бит
+ * ----------------------------------------------------------------
+ * Constructor to initialize a container of size <num_bits> bits
+ */
 BitContainer::BitContainer(const size_t num_bits) : size_{num_bits}
 {
     bits_.resize(NumLongsNeeded(num_bits));
 }
 
 /*
-* Конструктор для создания контейнера из строки (лучше использовать для тестов)
-* -----------------------------------------------------------------------------
-* Constructor for creating a container from a string (better used for tests)
-*/
+ * Конструктор для создания контейнера из строки (лучше использовать для тестов)
+ * -----------------------------------------------------------------------------
+ * Constructor for creating a container from a string (better used for tests)
+ */
 BitContainer::BitContainer(const std::string& str)
 {
+
     fromString(str);
 }
 
 /*
-* Количество longlong'ов необходимое для <num_bits> бит
-* -----------------------------------------------------
-* Number of longlongs needed for <num_bits> bits
-*/
+ * Количество unsigned long'ов необходимое для <num_bits> бит
+ * -----------------------------------------------------
+ * Number of unsigned longs needed for <num_bits> bits
+ */
 std::size_t BitContainer::NumLongsNeeded(size_t num_bits)
 {
     return (num_bits + kBitsPerLongLong - 1) / kBitsPerLongLong;
 }
 
 /*
-* Геттер размера 
-* --------------
-* Size getter
-*/
+ * Геттер размера
+ * --------------
+ * Size getter
+ */
 std::size_t BitContainer::size() const
 {
     return size_;
 }
 
 /*
-* Установить в бит <index> значение <value>
-* -----------------------------------------
-* Set bit <index> to <value>
-*/
+ * Установить в бит <index> значение <value>
+ * -----------------------------------------
+ * Set bit <index> to <value>
+ */
 void BitContainer::set(std::size_t index, bool value)
 {
     if (index >= size_)
@@ -75,7 +76,7 @@ void BitContainer::set(std::size_t index, bool value)
     }
     std::size_t long_index = index / kBitsPerLongLong;
     std::size_t bit_index = index % kBitsPerLongLong;
-    long long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
+    unsigned long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
     if (value)
     {
         bits_[long_index] |= mask;
@@ -87,10 +88,10 @@ void BitContainer::set(std::size_t index, bool value)
 }
 
 /*
-* Вернуть значение бита <index>
-* -----------------------------
-* Return value of bit <index>
-*/
+ * Вернуть значение бита <index>
+ * -----------------------------
+ * Return value of bit <index>
+ */
 bool BitContainer::get(std::size_t index) const
 {
     if (index >= size_)
@@ -99,15 +100,15 @@ bool BitContainer::get(std::size_t index) const
     }
     std::size_t long_index = index / kBitsPerLongLong;
     std::size_t bit_index = index % kBitsPerLongLong;
-    long long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
+    unsigned long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
     return (bits_[long_index] & mask) != 0;
 }
 
 /*
-* Очистить контейнер
-* ------------------
-* Clear container
-*/
+ * Очистить контейнер
+ * ------------------
+ * Clear container
+ */
 void BitContainer::clear()
 {
     bits_.clear();
@@ -115,10 +116,10 @@ void BitContainer::clear()
 }
 
 /*
-* Добавить в контейнер <num_bits> нулевых бит
-* -------------------------------------------
-* Add zero bits to container <num_bits>
-*/
+ * Добавить в контейнер <num_bits> нулевых бит
+ * -------------------------------------------
+ * Add zero bits to container <num_bits>
+ */
 void BitContainer::add(std::size_t num_bits)
 {
     std::size_t old_size = size_;
@@ -140,20 +141,19 @@ void BitContainer::add(BitContainer sequence)
 }
 
 /*
-* Полностью заменяет последовательность на данные из строки (лучше использовать для тестов)
-* -----------------------------------------------------------------------------------------
-* Completely replaced by a sequence of data from a string (preferable for tests)
-*/
+ * Полностью заменяет последовательность на данные из строки (лучше использовать для тестов)
+ * -----------------------------------------------------------------------------------------
+ * Completely replaced by a sequence of data from a string (preferable for tests)
+ */
 void BitContainer::fromString(const std::string& str)
 {
     size_ = str.size();
-    bits_.resize(NumLongsNeeded(str.size()));
+    bits_.resize(NumLongsNeeded(size()));
     for (std::size_t i = 0; i < size(); ++i)
     {
         set(i, str[i] == '1');
     }
 }
-
 
 BitContainer BitContainer::subContainer(size_t start_index, size_t length)
 {
@@ -187,16 +187,29 @@ BitContainer BitContainer::toLength(size_t length)
     return subContainer(0, length);
 }
 
-long long BitContainer::getNum(size_t start_index, size_t length)
+/*
+ * Получить часть контейнера в виде unsigned long начиная с <start_index> длиной <length>
+ * --------------------------------------------------------------------------------------
+ * Get part of container as unsigned long starting at <start_index> of length <length>
+ */
+unsigned long BitContainer::getNum(size_t start_index, size_t length)
 {
     if (start_index + length > size() || length > kBitsPerLongLong || length <= 0 || start_index < 0)
     {
         throw std::out_of_range("BitContainer::getNum() out of range");
     }
 
-    size_t long_index = NumLongsNeeded(start_index + 1);
+    size_t long_index = NumLongsNeeded(start_index + 1) - 1;
     size_t shift = start_index % kBitsPerLongLong;
-    long long result = (bits_[long_index] << shift) & (bits_[long_index + 1] >> (kBitsPerLongLong - shift));
+    unsigned long result;
+    if (shift + length > kBitsPerLongLong)
+    {
+        result = (bits_[long_index] << shift) | (bits_[long_index + 1] >> (kBitsPerLongLong - shift));
+    }
+    else
+    {
+        result = bits_[long_index] << shift;
+    }
     result >>= kBitsPerLongLong - length;
     return result;
 }
@@ -224,6 +237,7 @@ void BitContainer::trimLeadingZeros()
         bit = get(i);
     }
 
+    //TODO сдвигами
     for (size_t j = 0; j < size() - i; ++j)
     {
         set(j, get(j + i));
@@ -233,12 +247,11 @@ void BitContainer::trimLeadingZeros()
     size_ = size() - i;
 }
 
-
 /*
-* Возвращает контейнер в виде строки размера <num_bits> с переходом на строку каждые 100 символов
-* -----------------------------------------------------------------------------------------------
-* Returns the container as a string of size <num_bits> with a line break every 100 characters
-*/
+ * Возвращает контейнер в виде строки размера <num_bits> с переходом на строку каждые 100 символов
+ * -----------------------------------------------------------------------------------------------
+ * Returns the container as a string of size <num_bits> with a line break every 100 characters
+ */
 std::string BitContainer::getInfo(size_t num_bits) const
 {
     std::string result;
@@ -293,10 +306,10 @@ bool BitContainer::equals(BitContainer& sequence)
 }
 
 /*
-* Преобразует целое число со знаком в строку
-* ------------------------------------------
-* Converts a signed integer to a string
-*/
+ * Преобразует целое число со знаком в строку
+ * ------------------------------------------
+ * Converts a signed integer to a string
+ */
 std::string BitContainer::toString()
 {
     std::string result{};
@@ -307,6 +320,11 @@ std::string BitContainer::toString()
     return result;
 }
 
+/*
+* Оператор присваивания
+* ---------------------
+* Assignment operator
+*/
 BitContainer& BitContainer::operator=(const BitContainer& container)
 {
     this->bits_.resize(NumLongsNeeded(container.size()));
@@ -352,10 +370,10 @@ BitContainer BitContainer::operator^(const BitContainer& container) const
 }
 
 /*
-* Сравнивает два контейнера на полное равенство (включая длину и не отбрасывает начальные нули)
-* -------------------------------------------------------------------------------------------------------
-* Tests compares two containers for complete equality (including length and does not discard leading zeros)
-*/
+ * Сравнивает два контейнера на полное равенство (включая длину и не отбрасывает начальные нули)
+ * -------------------------------------------------------------------------------------------------------
+ * Tests compares two containers for complete equality (including length and does not discard leading zeros)
+ */
 bool BitContainer::operator==(const BitContainer& container) const
 {
     if (size() != container.size())
@@ -369,7 +387,7 @@ bool BitContainer::operator==(const BitContainer& container) const
             return false;
         }
     }
-    //последний long long сравнивается по битам
+    // последний unsigned long сравнивается по битам
     for (size_t i = (bits_.size() - 1) * kBitsPerLongLong; i < size(); ++i)
     {
         if (get(i) != container.get(i))

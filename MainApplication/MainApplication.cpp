@@ -11,6 +11,10 @@ using std::endl;
 
 int main()
 {
+    BitContainer test("10011011010011110000101000010110000001011110101111001101");
+    test.getNum(0, 32);
+
+
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;
 
@@ -85,7 +89,7 @@ int main()
             BitContainer message_number = bc.subContainer(data_begin_index, 12); // первые 12 бит
             if (message_number == BitContainer("111111101001"))
             {
-                char message_subtype = bc.subContainer(data_begin_index + 12, 4).getNum(); // покажем 4 бита - message sub type
+                char message_subtype = bc.subContainer(data_begin_index + 12, 4).getNum(0, 4); // покажем 4 бита - message sub type
                 if (message_subtype == 1)
                 {
                     BitContainer message_one = bc.subContainer(data_begin_index, 1695);

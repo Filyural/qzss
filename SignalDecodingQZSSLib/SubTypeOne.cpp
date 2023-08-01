@@ -2,11 +2,11 @@
 
 SubTypeOne::SubTypeOne(BitContainer& message_) : message{message_}
 {
-    GPS_epoch_time = message_.subContainer(16, 20).getNum();
-    ssr_update_interval = message_.subContainer(36, 4).getNum();
+    GPS_epoch_time = message_.subContainer(16, 20).getNum(0, message.size());
+    ssr_update_interval = message_.subContainer(36, 4).getNum(0, message.size());
     multiple_message_indicator = message_.get(40);
-    IOD = message_.subContainer(41, 4).getNum();
-    number_of_GNSS = message_.subContainer(45, 4).getNum();
+    IOD = message_.subContainer(41, 4).getNum(0, message.size());
+    number_of_GNSS = message_.subContainer(45, 4).getNum(0, message.size());
     size_t index = 49;
     for (size_t i = 0; i < number_of_GNSS; i++)
     {
