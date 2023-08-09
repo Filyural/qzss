@@ -11,9 +11,9 @@ using std::endl;
 
 int main()
 {
-    BitContainer test("10011011010011110000101000010110000001011110101111001101");
-    test.getNum(0, 32);
 
+     //BitContainer test("10110101011101101101010110");
+     //test.subContainer(0, 1);
 
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;

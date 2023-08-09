@@ -7,7 +7,7 @@ private:
     std::vector<unsigned long> bits_;
     std::size_t size_;
 
-    static constexpr int kBitsPerLongLong = sizeof(unsigned long) * 8;
+    static constexpr int kBitsPerUnsignedLong = sizeof(unsigned long) * 8;
     static size_t NumLongsNeeded(std::size_t num_bits);
 
 public:
@@ -29,9 +29,11 @@ public:
     void trimLeadingZeros();
     std::string getInfo(size_t num_bits) const;
     bool equals(BitContainer& sequence);
-    std::string toString();
+    std::string toString() const;
 
     BitContainer& operator=(const BitContainer& container);
     BitContainer operator^(const BitContainer& container) const;
     bool operator==(const BitContainer& container) const;
+
 };
+

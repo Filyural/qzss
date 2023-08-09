@@ -50,7 +50,7 @@ BitContainer::BitContainer(const std::string& str)
  */
 std::size_t BitContainer::NumLongsNeeded(size_t num_bits)
 {
-    return (num_bits + kBitsPerLongLong - 1) / kBitsPerLongLong;
+    return (num_bits + kBitsPerUnsignedLong - 1) / kBitsPerUnsignedLong;
 }
 
 /*
@@ -74,9 +74,9 @@ void BitContainer::set(std::size_t index, bool value)
     {
         throw std::out_of_range("BitContainer::set() out of range");
     }
-    std::size_t long_index = index / kBitsPerLongLong;
-    std::size_t bit_index = index % kBitsPerLongLong;
-    unsigned long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
+    std::size_t long_index = index / kBitsPerUnsignedLong;
+    std::size_t bit_index = index % kBitsPerUnsignedLong;
+    unsigned long mask = 1LL << (kBitsPerUnsignedLong - bit_index - 1);
     if (value)
     {
         bits_[long_index] |= mask;
@@ -98,9 +98,9 @@ bool BitContainer::get(std::size_t index) const
     {
         throw std::out_of_range("BitContainer::get() out of range");
     }
-    std::size_t long_index = index / kBitsPerLongLong;
-    std::size_t bit_index = index % kBitsPerLongLong;
-    unsigned long mask = 1LL << (kBitsPerLongLong - bit_index - 1);
+    std::size_t long_index = index / kBitsPerUnsignedLong;
+    std::size_t bit_index = index % kBitsPerUnsignedLong;
+    unsigned long mask = 1LL << (kBitsPerUnsignedLong - bit_index - 1);
     return (bits_[long_index] & mask) != 0;
 }
 
@@ -122,22 +122,56 @@ void BitContainer::clear()
  */
 void BitContainer::add(std::size_t num_bits)
 {
-    std::size_t old_size = size_;
+    // std::size_t old_size = size_;
     size_ += num_bits;
     bits_.resize(NumLongsNeeded(size_));
 }
 
+/*
+ * ƒобавить к контейнеру <sequence> последовательность справа (в конец)
+ * --------------------------------------------------------------------
+ * Add a sequence to the right (end) of the <sequence> container
+ */
 void BitContainer::add(BitContainer sequence)
 {
     // можно было вызвать add(size_t), но лучше не заполн€ть новые позиции сначала нул€ми, а потом нужными значени€ми
     std::size_t num_bits = sequence.size();
     std::size_t old_size = size_;
-    size_ += num_bits;
-    bits_.resize(NumLongsNeeded(size_));
-    for (size_t i = old_size; i < size_; i++)
+    add(num_bits);
+    size_t long_index = NumLongsNeeded(old_size) - 1;
+    size_t shift = old_size % kBitsPerUnsignedLong;
+    size_t longs_size = NumLongsNeeded(size_);
+    if (!shift)
     {
-        set(i, sequence.get(i - old_size));
+        for (size_t i = long_index + 1, j = 0; i < longs_size; ++i, ++j)
+        {
+            bits_[i] = sequence.bits_[j];
+        }
+        return;
     }
+
+    bits_[long_index] |= sequence.bits_[0] >> shift;
+    //for (size_t i = long_index + 1, j = 0; i < longs_size - 1; ++i, ++j)
+    //{
+    //    bits_[i] = (sequence.bits_[j] << (kBitsPerUnsignedLong - shift)) | (sequence.bits_[j + 1] >> shift);
+    //}
+    //bits_[longs_size - 1] = sequence.bits_[longs_size - 1 - long_index] << (kBitsPerUnsignedLong - shift);
+    /*
+     * в случае, если shift == kBitsPerUnsignedLong, то может быть ситуаци€,
+     * где в последний UL запишетс€ только часть данных, поэтому чтобы этого не допустить мы всегда
+     * добавл€ем кусок из следующего UL (если индекс не выходит за пределы - иначе такой ситуации не произойдет)
+     */
+    //if (longs_result_size + long_start_index < NumLongsNeeded(size_))
+    //{
+    //    result.bits_[longs_result_size - 1] |= bits_[longs_result_size + long_start_index] >> (kBitsPerUnsignedLong - shift);
+    //}
+
+
+
+    // for (size_t i = old_size; i < size_; i++)
+    //{
+    //     set(i, sequence.get(i - old_size));
+    // }
 }
 
 /*
@@ -155,36 +189,86 @@ void BitContainer::fromString(const std::string& str)
     }
 }
 
+/*
+ * ¬озвращает подстроку от данной битовой строки начина€ с индекса <start_index> длиной в <length> бит
+ * ---------------------------------------------------------------------------------------------------
+ * Returns a substring from the given bit string starting at index <start_index> with a length of <length> bits
+ */
 BitContainer BitContainer::subContainer(size_t start_index, size_t length)
 {
-    if (start_index >= size() || length + start_index > size())
+    if (start_index >= size() || length + start_index > size() || length <= 0)
     {
         throw std::out_of_range("BitContainer::get() out of range");
     }
 
     BitContainer result(length);
 
-    for (size_t i = 0; i < length; ++i)
+    size_t shift = start_index % kBitsPerUnsignedLong;
+    size_t long_start_index = NumLongsNeeded(start_index + 1) - 1;
+    size_t longs_result_size = NumLongsNeeded(length);
+    if (!shift)
     {
-        result.set(i, this->get(start_index + i));
+        for (size_t i = 0, j = long_start_index; i < longs_result_size; ++i, ++j)
+        {
+            result.bits_[i] = bits_[j];
+        }
+    }
+    else
+    {
+        for (size_t i = 0, j = long_start_index; i < longs_result_size - 1; ++i, ++j)
+        {
+            result.bits_[i] = (bits_[j] << shift) | (bits_[j + 1] >> (kBitsPerUnsignedLong - shift));
+        }
+        result.bits_[longs_result_size - 1] = bits_[longs_result_size + long_start_index - 1] << shift;
+        /*
+         * в случае, если shift == kBitsPerUnsignedLong, то может быть ситуаци€,
+         * где в последний UL запишетс€ только часть данных, поэтому чтобы этого не допустить мы всегда
+         * добавл€ем кусок из следующего UL (если индекс не выходит за пределы - иначе такой ситуации не произойдет)
+         */
+        if (longs_result_size + long_start_index < NumLongsNeeded(size_))
+        {
+            result.bits_[longs_result_size - 1] |= bits_[longs_result_size + long_start_index] >> (kBitsPerUnsignedLong - shift);
+        }
     }
 
+    size_t double_shift = (kBitsPerUnsignedLong - (length % kBitsPerUnsignedLong)) % kBitsPerUnsignedLong;
+
+    unsigned long mask = (/*0xffffffffUL*/ ULONG_MAX >> double_shift) << double_shift;
+    result.bits_[longs_result_size - 1] &= mask;
+
+    // for (size_t i = 0; i < length; ++i)
+    //{
+    //     result.set(i, this->get(start_index + i));
+    // }
     return result;
 }
-
+/*
+ * ≈сли <length> равен <size_> - вернет контейнер равный текущему
+ * ≈сли <length> больше <size_> - вернет контейнер размера <length>, заполненный дополнительными <length - size_> нул€ми в Ќј„јЋ≈
+ * последовательности
+ * ≈сли <length> меньше <size_> - вернет подстроку от данной битовой строки начина€ с индекса 0, размером <length>
+ * -------------------------------------------------------------------------------------------------------------
+ * If <length> is equal to <size_> - will return a container equal to the current one
+ * If <length> is greater than <size_> - will return a container of size <length> filled with extra <length - size_> zeros at the START of the
+ * sequence
+ * If <length> is less than <size_> - will return a substring from the given bit string starting from index 0, of size <length>
+ */
 BitContainer BitContainer::toLength(size_t length)
 {
-    size_t size_difference = length - size();
-    BitContainer result(length);
-    if (size_difference >= 0)
+    if (length == size_)
     {
-        for (size_t i = size_difference; i < length; i++)
-        {
-            result.set(i, get(i - size_difference));
-        }
+        return *this;
+    }
+    else if (length > size_)
+    {
+        BitContainer result(length - size_);
+        result.add(*this);
         return result;
     }
-    return subContainer(0, length);
+    else
+    {
+        return subContainer(0, length);
+    }
 }
 
 /*
@@ -194,23 +278,23 @@ BitContainer BitContainer::toLength(size_t length)
  */
 unsigned long BitContainer::getNum(size_t start_index, size_t length)
 {
-    if (start_index + length > size() || length > kBitsPerLongLong || length <= 0 || start_index < 0)
+    if (start_index + length > size() || length > kBitsPerUnsignedLong || length <= 0 || start_index < 0)
     {
         throw std::out_of_range("BitContainer::getNum() out of range");
     }
 
     size_t long_index = NumLongsNeeded(start_index + 1) - 1;
-    size_t shift = start_index % kBitsPerLongLong;
+    size_t shift = start_index % kBitsPerUnsignedLong;
     unsigned long result;
-    if (shift + length > kBitsPerLongLong)
+    if (shift + length > kBitsPerUnsignedLong)
     {
-        result = (bits_[long_index] << shift) | (bits_[long_index + 1] >> (kBitsPerLongLong - shift));
+        result = (bits_[long_index] << shift) | (bits_[long_index + 1] >> (kBitsPerUnsignedLong - shift));
     }
     else
     {
         result = bits_[long_index] << shift;
     }
-    result >>= kBitsPerLongLong - length;
+    result >>= kBitsPerUnsignedLong - length;
     return result;
 }
 
@@ -237,7 +321,7 @@ void BitContainer::trimLeadingZeros()
         bit = get(i);
     }
 
-    //TODO сдвигами
+    // TODO сдвигами
     for (size_t j = 0; j < size() - i; ++j)
     {
         set(j, get(j + i));
@@ -310,7 +394,7 @@ bool BitContainer::equals(BitContainer& sequence)
  * ------------------------------------------
  * Converts a signed integer to a string
  */
-std::string BitContainer::toString()
+std::string BitContainer::toString() const
 {
     std::string result{};
     for (size_t i = 0; i < size(); i++)
@@ -321,10 +405,10 @@ std::string BitContainer::toString()
 }
 
 /*
-* ќператор присваивани€
-* ---------------------
-* Assignment operator
-*/
+ * ќператор присваивани€
+ * ---------------------
+ * Assignment operator
+ */
 BitContainer& BitContainer::operator=(const BitContainer& container)
 {
     this->bits_.resize(NumLongsNeeded(container.size()));
@@ -380,6 +464,10 @@ bool BitContainer::operator==(const BitContainer& container) const
     {
         return false;
     }
+    if (size() == 0)
+    {
+        return true;
+    }
     for (size_t i = 0; i < bits_.size() - 1; i++)
     {
         if (bits_[i] != container.bits_[i])
@@ -388,7 +476,7 @@ bool BitContainer::operator==(const BitContainer& container) const
         }
     }
     // последний unsigned long сравниваетс€ по битам
-    for (size_t i = (bits_.size() - 1) * kBitsPerLongLong; i < size(); ++i)
+    for (size_t i = (bits_.size() - 1) * kBitsPerUnsignedLong; i < size(); ++i)
     {
         if (get(i) != container.get(i))
         {
