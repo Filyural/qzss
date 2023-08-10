@@ -12,8 +12,12 @@ using std::endl;
 int main()
 {
 
-     //BitContainer test("10110101011101101101010110");
-     //test.subContainer(0, 1);
+    // BitContainer test("10110101011101101101010110");
+    // test.subContainer(0, 1);
+
+    BitContainer test1("1011010101110");
+    BitContainer test2("1101101010111");
+    test1.add(test2);
 
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;

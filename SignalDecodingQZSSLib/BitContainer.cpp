@@ -151,22 +151,11 @@ void BitContainer::add(BitContainer sequence)
     }
 
     bits_[long_index] |= sequence.bits_[0] >> shift;
-    //for (size_t i = long_index + 1, j = 0; i < longs_size - 1; ++i, ++j)
-    //{
-    //    bits_[i] = (sequence.bits_[j] << (kBitsPerUnsignedLong - shift)) | (sequence.bits_[j + 1] >> shift);
-    //}
-    //bits_[longs_size - 1] = sequence.bits_[longs_size - 1 - long_index] << (kBitsPerUnsignedLong - shift);
-    /*
-     * в случае, если shift == kBitsPerUnsignedLong, то может быть ситуация,
-     * где в последний UL запишется только часть данных, поэтому чтобы этого не допустить мы всегда
-     * добавляем кусок из следующего UL (если индекс не выходит за пределы - иначе такой ситуации не произойдет)
-     */
-    //if (longs_result_size + long_start_index < NumLongsNeeded(size_))
-    //{
-    //    result.bits_[longs_result_size - 1] |= bits_[longs_result_size + long_start_index] >> (kBitsPerUnsignedLong - shift);
-    //}
-
-
+    for (size_t i = long_index + 1, j = 0; i < longs_size - 1; ++i, ++j)
+    {
+        bits_[i] = (sequence.bits_[j] << (kBitsPerUnsignedLong - shift)) | (sequence.bits_[j + 1] >> shift);
+    }
+    bits_[longs_size - 1] = sequence.bits_[longs_size - long_index - 2] << (kBitsPerUnsignedLong - shift);
 
     // for (size_t i = old_size; i < size_; i++)
     //{
@@ -249,9 +238,8 @@ BitContainer BitContainer::subContainer(size_t start_index, size_t length)
  * Если <length> меньше <size_> - вернет подстроку от данной битовой строки начиная с индекса 0, размером <length>
  * -------------------------------------------------------------------------------------------------------------
  * If <length> is equal to <size_> - will return a container equal to the current one
- * If <length> is greater than <size_> - will return a container of size <length> filled with extra <length - size_> zeros at the START of the
- * sequence
- * If <length> is less than <size_> - will return a substring from the given bit string starting from index 0, of size <length>
+ * If <length> is greater than <size_> - will return a container of size <length> filled with extra <length - size_> zeros at the START of
+ * the sequence If <length> is less than <size_> - will return a substring from the given bit string starting from index 0, of size <length>
  */
 BitContainer BitContainer::toLength(size_t length)
 {
