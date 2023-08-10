@@ -196,6 +196,7 @@ public:
         Assert::ExpectException<std::out_of_range>([&test] { test.subContainer(100, 157); });
     }
 
+    //TODO остальные тесты
     TEST_METHOD(ToLengthTest)
     {
         BitContainer test("10110101011101101101010110");
@@ -205,20 +206,24 @@ public:
         Assert::AreEqual(BitContainer("00010110101011101101101010110"), test.toLength(29));
         Assert::AreEqual(BitContainer("00000010110101011101101101010110"), test.toLength(32));
         Assert::AreEqual(BitContainer("0000000010110101011101101101010110"), test.toLength(34));
+        Assert::AreEqual(BitContainer("0000000000000000000000000000000000000010110101011101101101010110"), test.toLength(64));
+        Assert::AreEqual(BitContainer("0000000000000000000000000000000000000000010110101011101101101010110"), test.toLength(67));
 
         test.fromString("10011011010011110000101000010110");
+        Assert::AreEqual(BitContainer("1"), test.toLength(1));
+        Assert::AreEqual(BitContainer("1001101101001"), test.toLength(13));
+        Assert::AreEqual(BitContainer("10011011010011110000101000"), test.toLength(26));
+        Assert::AreEqual(BitContainer("10011011010011110000101000010"), test.toLength(29));
+        Assert::AreEqual(BitContainer("10011011010011110000101000010110"), test.toLength(32));
+        Assert::AreEqual(BitContainer("0010011011010011110000101000010110"), test.toLength(34));
+        Assert::AreEqual(BitContainer("0000000000000000000000000000000010011011010011110000101000010110"), test.toLength(64));
+        Assert::AreEqual(BitContainer("0000000000000000000000000000000000010011011010011110000101000010110"), test.toLength(67));
+
+        //TODO
         test.fromString("10011011010011110000101000010110000001011110101111001101");
         test.fromString("111010111101110011011101000010010110001110111011101001000001100110101011111110011101011100101110101111010001111101"
                         "010011111010000101100111000111100001101100000000101110000111111100101011101101010011110000101101010110001010100001"
                         "1111011001100101011010000110");
     }
 };
-
-// TEST_CLASS(UnitTestProject2)
-//{
-// public:
-//     TEST_METHOD(GetNumTest3){};
-//
-//     TEST_METHOD(GetNumTest4){};
-// };
 } // namespace UnitTestProject

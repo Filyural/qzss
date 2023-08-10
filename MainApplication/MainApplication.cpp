@@ -15,8 +15,8 @@ int main()
     // BitContainer test("10110101011101101101010110");
     // test.subContainer(0, 1);
 
-    BitContainer test1("1011010101110");
-    BitContainer test2("1101101010111");
+    BitContainer test1("00000000");
+    BitContainer test2("10110101011101101101010110");
     test1.add(test2);
 
     const int MESSAGE_LENGTH = 1776;

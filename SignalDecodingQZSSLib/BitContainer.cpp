@@ -155,7 +155,21 @@ void BitContainer::add(BitContainer sequence)
     {
         bits_[i] = (sequence.bits_[j] << (kBitsPerUnsignedLong - shift)) | (sequence.bits_[j + 1] >> shift);
     }
-    bits_[longs_size - 1] = sequence.bits_[longs_size - long_index - 2] << (kBitsPerUnsignedLong - shift);
+
+    //костыль, мне не нравится, надо подумать как переделать
+    if ((static_cast<int>(longs_size) - static_cast<int>(long_index) - 2) >= 0)
+    {
+        bits_[longs_size - 1] = sequence.bits_[longs_size - long_index - 2] << (kBitsPerUnsignedLong - shift);
+        if (static_cast<int>(longs_size) - static_cast<int>(long_index) - 1 < NumLongsNeeded(num_bits))
+        {
+            bits_[longs_size - 1] |= sequence.bits_[longs_size - long_index - 1] >> shift;
+        }
+    }
+
+    //маска на зануление более правых битов
+    size_t double_shift = (kBitsPerUnsignedLong - (size_ % kBitsPerUnsignedLong)) % kBitsPerUnsignedLong;
+    unsigned long mask = (/*0xffffffffUL*/ ULONG_MAX >> double_shift) << double_shift;
+    bits_[longs_size - 1] &= mask;
 
     // for (size_t i = old_size; i < size_; i++)
     //{
