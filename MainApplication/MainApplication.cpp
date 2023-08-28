@@ -16,18 +16,18 @@ int main()
     // BitContainer test("10110101011101101101010110");
     // test.subContainer(0, 1);
 
-    BitContainer test("10110101011101101101010110101011101101101010110111111111110110110101011010110101011101101101010110111111111110110110101011010110111111111110110110110101011101101101010110111111111110110110101011010101011011111111111011011010101101010110");
-    //test1.add(test2);
-    auto start = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < 1000000; i++)
-    {
-        test.subContainer(30, 150);
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> duration = end - start;
-    cout << "Duration " << duration.count() << endl;
-    return 0;
-
+    //BitContainer test(
+    //    "1011010101110110110101011010101110110110101011011111111111011011010101101011010101110110110101011011111111111011011010101101011011"
+    //    "1111111110110110110101011101101101010110111111111110110110101011010101011011111111111011011010101101010110");
+    //auto start = std::chrono::high_resolution_clock::now();
+    //for (size_t i = 0; i < 1000000; i++)
+    //{
+    //    test = test ^ test;
+    //}
+    //auto end = std::chrono::high_resolution_clock::now();
+    //std::chrono::duration<float> duration = end - start;
+    //cout << "Duration " << duration.count() << endl;
+    //return 0;
 
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;
@@ -41,12 +41,12 @@ int main()
     BitContainer preamble("11010011");
     BitContainer crc_polynomial("1100001100100110011111011");
 
-    // std::vector<size_t> preamble_indexes = KMP(bc, preamble);
-    // std::vector<size_t> checked_preambles(0);
+     std::vector<size_t> preamble_indexes = KMP(bc, preamble);
+     std::vector<size_t> checked_preambles(0);
     // size_t preamble_index;
-
+    // std::cout << preamble_indexes.size() << endl;
     ////здесь проверка CRC (можно указать любое число до preamble_indexes.size() ~ 8000+)
-    // for (size_t i = 0; i < 1000 /*preamble_indexes.size()*/; ++i)
+    // for (size_t i = 0; i < preamble_indexes.size(); ++i)
     //{
     //     preamble_index = preamble_indexes[i];
     //     if (preamble_index + FULL_MESSAGE_LENGTH > bc.size())

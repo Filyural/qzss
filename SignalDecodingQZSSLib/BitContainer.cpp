@@ -317,11 +317,15 @@ void BitContainer::trimLeadingZeros()
     }
 
     size_t i = 0;
-    bool bit = get(0);
+    while (!bits_[i])
+    {
+        ++i;
+    }
+    i *= kBitsPerUnsignedLong;
+    bool bit = get(i);
     while (!bit)
     {
         ++i;
-        // возможно проверку на нулевую строку стоит вынести в отдельную функцию
         if (i == size())
         {
             bits_.resize(NumLongsNeeded(0));
@@ -332,14 +336,7 @@ void BitContainer::trimLeadingZeros()
         bit = get(i);
     }
 
-    // TODO сдвигами
-    for (size_t j = 0; j < size() - i; ++j)
-    {
-        set(j, get(j + i));
-    }
-
-    bits_.resize(NumLongsNeeded(size() - i));
-    size_ = size() - i;
+    *this = subContainer(i, size() - i);
 }
 
 /*
@@ -448,35 +445,51 @@ BitContainer& BitContainer::operator=(const BitContainer& container)
     return *this;
 }
 
+/*
+* Применяет XOR к двум контейнерам одинакового размера (если размеры разные, то выбрасывает исключение <invalid_argument>
+* ------------------------------------------------------------------------------------------------------------------------------------
+* Applies XOR to the volume of containers of the same size (if the sizes are different, then throws the constraints <invalid_argument>
+*/
 BitContainer BitContainer::operator^(const BitContainer& container) const
 {
-    // скопировать в результат меньший контейнер (байтами, если надо со сдвигами) сделать ^= с большим контейнером по байтам
-    bool this_smaller = this->size() < container.size();
-    size_t smallest_size = this_smaller ? this->size() : container.size();
-    size_t biggest_size = this_smaller ? container.size() : this->size();
-    BitContainer result(biggest_size);
+    //// скопировать в результат меньший контейнер (байтами, если надо со сдвигами) сделать ^= с большим контейнером по байтам
+    //bool this_smaller = this->size() < container.size();
+    //size_t smallest_size = this_smaller ? this->size() : container.size();
+    //size_t biggest_size = this_smaller ? container.size() : this->size();
+    //BitContainer result(biggest_size);
 
-    // заполняем первые биты, которых нет в меньшем контейнере
-    // битами из бОльшего контейнера
-    if (this_smaller)
+    //// заполняем первые биты, которых нет в меньшем контейнере
+    //// битами из бОльшего контейнера
+    //if (this_smaller)
+    //{
+    //    for (size_t i = 0; i < biggest_size - smallest_size; i++)
+    //    {
+    //        result.set(i, container.get(i));
+    //    }
+    //}
+    //else
+    //{
+    //    for (size_t i = 0; i < biggest_size - smallest_size; i++)
+    //    {
+    //        result.set(i, this->get(i));
+    //    }
+    //}
+
+    //// заполняем остальные биты
+    //for (size_t i = 0; i < smallest_size; ++i)
+    //{
+    //    result.set(biggest_size - i - 1, this->get(this->size() - i - 1) ^ container.get(container.size() - i - 1));
+    //}    if (size_ != container.size_)
+    if (size_ != container.size_)
     {
-        for (size_t i = 0; i < biggest_size - smallest_size; i++)
-        {
-            result.set(i, container.get(i));
-        }
-    }
-    else
-    {
-        for (size_t i = 0; i < biggest_size - smallest_size; i++)
-        {
-            result.set(i, this->get(i));
-        }
+        throw std::invalid_argument("BitContainers must have the same size for bitwise XOR operation");
     }
 
-    // заполняем остальные биты
-    for (size_t i = 0; i < smallest_size; ++i)
+    BitContainer result(size_);
+
+    for (std::size_t i = 0; i < bits_.size(); ++i)
     {
-        result.set(biggest_size - i - 1, this->get(this->size() - i - 1) ^ container.get(container.size() - i - 1));
+        result.bits_[i] = bits_[i] ^ container.bits_[i];
     }
 
     return result;
