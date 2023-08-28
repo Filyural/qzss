@@ -156,7 +156,7 @@ void BitContainer::add(BitContainer sequence)
         bits_[i] = (sequence.bits_[j] << (kBitsPerUnsignedLong - shift)) | (sequence.bits_[j + 1] >> shift);
     }
 
-    //костыль, мне не нравится, надо подумать как переделать
+    // костыль, мне не нравится, надо подумать как переделать
     if ((static_cast<int>(longs_size) - static_cast<int>(long_index) - 2) >= 0)
     {
         bits_[longs_size - 1] = sequence.bits_[longs_size - long_index - 2] << (kBitsPerUnsignedLong - shift);
@@ -166,7 +166,7 @@ void BitContainer::add(BitContainer sequence)
         }
     }
 
-    //маска на зануление более правых битов
+    // маска на зануление более правых битов
     size_t double_shift = (kBitsPerUnsignedLong - (size_ % kBitsPerUnsignedLong)) % kBitsPerUnsignedLong;
     unsigned long mask = (/*0xffffffffUL*/ ULONG_MAX >> double_shift) << double_shift;
     bits_[longs_size - 1] &= mask;
@@ -285,6 +285,15 @@ unsigned long BitContainer::getNum(size_t start_index, size_t length)
         throw std::out_of_range("BitContainer::getNum() out of range");
     }
 
+    // unsigned long result = 0;
+    // size_t prefix_length = NumLongsNeeded(start_index) * kBitsPerUnsignedLong - start_index;
+    // size_t postfix_length = kBitsPerUnsignedLong - prefix_length;
+
+    // for (size_t i = start_index; i < start_index + length; i++)
+    //{
+    //     result += get(i) * pow(2, (start_index + length - i - 1));
+    // }
+
     size_t long_index = NumLongsNeeded(start_index + 1) - 1;
     size_t shift = start_index % kBitsPerUnsignedLong;
     unsigned long result;
@@ -302,7 +311,7 @@ unsigned long BitContainer::getNum(size_t start_index, size_t length)
 
 void BitContainer::trimLeadingZeros()
 {
-    if (get(0))
+    if (size_ <= 0 || get(0))
     {
         return;
     }
@@ -357,9 +366,26 @@ std::string BitContainer::getInfo(size_t num_bits) const
     return result;
 }
 
+/*
+ * Возвращает true, если <this> равен <sequence> с учетом игнорирования всех нулей в начале до первой попавшейся единицы
+ * -----------------------------------------------------------------------------------------------------------------------------
+ * Returns true if <this> is equal to <sequence>, taking into account ignoring all leading zeros up to the first encountered one
+ */
 bool BitContainer::equals(BitContainer& sequence)
 {
     size_t i = 0, j = 0;
+    while (!bits_[i])
+    {
+        ++i;
+    }
+    i *= kBitsPerUnsignedLong;
+
+    while (!sequence.bits_[j])
+    {
+        ++j;
+    }
+    j *= kBitsPerUnsignedLong;
+
     bool bit = get(i);
     while (!bit)
     {
@@ -424,6 +450,7 @@ BitContainer& BitContainer::operator=(const BitContainer& container)
 
 BitContainer BitContainer::operator^(const BitContainer& container) const
 {
+    // скопировать в результат меньший контейнер (байтами, если надо со сдвигами) сделать ^= с большим контейнером по байтам
     bool this_smaller = this->size() < container.size();
     size_t smallest_size = this_smaller ? this->size() : container.size();
     size_t biggest_size = this_smaller ? container.size() : this->size();

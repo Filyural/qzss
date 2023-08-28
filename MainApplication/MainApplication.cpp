@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <chrono>
 #include "../SignalDecodingQZSSLib/framework.h"
 
 using std::cin;
@@ -15,9 +16,18 @@ int main()
     // BitContainer test("10110101011101101101010110");
     // test.subContainer(0, 1);
 
-    BitContainer test1("00000000");
-    BitContainer test2("10110101011101101101010110");
-    test1.add(test2);
+    BitContainer test("10110101011101101101010110101011101101101010110111111111110110110101011010110101011101101101010110111111111110110110101011010110111111111110110110110101011101101101010110111111111110110110101011010101011011111111111011011010101101010110");
+    //test1.add(test2);
+    auto start = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < 1000000; i++)
+    {
+        test.subContainer(30, 150);
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> duration = end - start;
+    cout << "Duration " << duration.count() << endl;
+    return 0;
+
 
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;
