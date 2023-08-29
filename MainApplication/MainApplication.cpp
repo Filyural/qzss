@@ -12,7 +12,8 @@ using std::endl;
 
 int main()
 {
-
+    std:: cout << BitContainer::testPass() << endl;
+    return 0;
     // BitContainer test("10110101011101101101010110");
     // test.subContainer(0, 1);
 
@@ -41,8 +42,8 @@ int main()
     BitContainer preamble("11010011");
     BitContainer crc_polynomial("1100001100100110011111011");
 
-     std::vector<size_t> preamble_indexes = KMP(bc, preamble);
-     std::vector<size_t> checked_preambles(0);
+     //std::vector<size_t> preamble_indexes = KMP(bc, preamble);
+     //std::vector<size_t> checked_preambles(0);
     // size_t preamble_index;
     // std::cout << preamble_indexes.size() << endl;
     ////здесь проверка CRC (можно указать любое число до preamble_indexes.size() ~ 8000+)

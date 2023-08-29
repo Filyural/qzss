@@ -319,6 +319,28 @@ public:
         result = BitContainer("101") ^ BitContainer("001");
         Assert::AreEqual(BitContainer("100"), result);
         //Assert::AreEqual(BitContainer("00000000000000000000000000"), result);
+        BitContainer container1("10110101011101101101010110");
+        BitContainer container2("11010111010101010101110010");
+        BitContainer expectedResult1("01100010001000111000100100");
+        Assert::AreEqual(expectedResult1, container1 ^ container2);
+
+        BitContainer container3("110101011101101101010110");
+        BitContainer container4("10110101011101101101010110");
+        Assert::ExpectException<std::invalid_argument>([&]() { container3 ^ container4; });
+
+        BitContainer container5("000110101010110");
+        BitContainer container6("000101010101101");
+        BitContainer expectedResult3("000011111111011");
+        Assert::AreEqual(expectedResult3, container5 ^ container6);
+
+        BitContainer container7("000110101010110");
+        BitContainer container8("00011101010110");
+        Assert::ExpectException<std::invalid_argument>([&]() { container7 ^ container8; });
+
+        BitContainer container9("1" + std::string(259, '0'));
+        BitContainer container10("0" + std::string(259, '1'));
+        BitContainer expectedResult5("1" + std::string(259, '1'));
+        Assert::AreEqual(expectedResult5, container9 ^ container10);
     }
 
     TEST_METHOD(trimLeadingZerosTest)
@@ -327,6 +349,30 @@ public:
         result = BitContainer("0000000000000010110101011101101101010110");
         result.trimLeadingZeros();
         Assert::AreEqual(BitContainer("10110101011101101101010110"), result);
+        // Test 1: No leading zeros
+        BitContainer result1("10110101011101101101010110");
+        result1.trimLeadingZeros();
+        Assert::AreEqual(BitContainer("10110101011101101101010110"), result1);
+
+        // Test 2: All leading zeros
+        BitContainer result2("0000000000000000000000000000");
+        result2.trimLeadingZeros();
+        Assert::AreEqual(BitContainer(""), result2);
+
+        // Test 3: Leading zeros and ones
+        BitContainer result3("0000011010101011101101101010110");
+        result3.trimLeadingZeros();
+        Assert::AreEqual(BitContainer("11010101011101101101010110"), result3);
+
+        // Test 4: Only one bit
+        BitContainer result4("0");
+        result4.trimLeadingZeros();
+        Assert::AreEqual(BitContainer(""), result4);
+
+        // Test 5: No leading zeros, different length
+        BitContainer result5("1110101011101101101010110");
+        result5.trimLeadingZeros();
+        Assert::AreEqual(BitContainer("1110101011101101101010110"), result5);
     }
 };
 } // namespace UnitTestProject

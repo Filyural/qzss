@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BitContainer.h"
+#include "BitContainerTest.h"
 
 /*
  * Конструктор по умолчанию
@@ -320,6 +321,12 @@ void BitContainer::trimLeadingZeros()
     while (!bits_[i])
     {
         ++i;
+        if (i == bits_.size())
+        {
+            bits_.resize(0);
+            size_ = 0;
+            return;
+        }
     }
     i *= kBitsPerUnsignedLong;
     bool bit = get(i);
@@ -368,7 +375,7 @@ std::string BitContainer::getInfo(size_t num_bits) const
  * -----------------------------------------------------------------------------------------------------------------------------
  * Returns true if <this> is equal to <sequence>, taking into account ignoring all leading zeros up to the first encountered one
  */
-bool BitContainer::equals(BitContainer& sequence)
+bool BitContainer::equals(BitContainer sequence)
 {
     size_t i = 0, j = 0;
     while (!bits_[i])
@@ -452,7 +459,6 @@ BitContainer& BitContainer::operator=(const BitContainer& container)
 */
 BitContainer BitContainer::operator^(const BitContainer& container) const
 {
-    //// скопировать в результат меньший контейнер (байтами, если надо со сдвигами) сделать ^= с большим контейнером по байтам
     //bool this_smaller = this->size() < container.size();
     //size_t smallest_size = this_smaller ? this->size() : container.size();
     //size_t biggest_size = this_smaller ? container.size() : this->size();
@@ -526,4 +532,9 @@ bool BitContainer::operator==(const BitContainer& container) const
         }
     }
     return true;
+}
+
+bool BitContainer::testPass()
+{
+    return BitContainerTest::test_ALL();
 }

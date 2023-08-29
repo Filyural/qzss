@@ -28,12 +28,13 @@ public:
     unsigned long getNum(size_t start_index, size_t length);
     void trimLeadingZeros();
     std::string getInfo(size_t num_bits) const;
-    bool equals(BitContainer& sequence);
+    bool equals(BitContainer sequence);
     std::string toString() const;
 
     BitContainer& operator=(const BitContainer& container);
     BitContainer operator^(const BitContainer& container) const;
     bool operator==(const BitContainer& container) const;
 
+    static bool testPass();
 };
 
