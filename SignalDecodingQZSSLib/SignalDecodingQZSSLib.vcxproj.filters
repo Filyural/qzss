@@ -24,16 +24,16 @@
     <ClInclude Include="SignalDecondingQZSSLib.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SubTypeOne.h">
+    <ClInclude Include="Headers\SubTypeOne.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderRTCM.h">
+    <ClInclude Include="Headers\HeaderRTCM.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="BitContainer.h">
+    <ClInclude Include="BitContainer\BitContainer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="BitContainerTest.h">
+    <ClInclude Include="Tests\BitContainerTest.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,16 +44,16 @@
     <ClCompile Include="pch.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SubTypeOne.cpp">
+    <ClCompile Include="Source\SubTypeOne.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="HeaderRTCM.cpp">
+    <ClCompile Include="Source\HeaderRTCM.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="BitContainer.cpp">
+    <ClCompile Include="BitContainer\BitContainer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="BitContainerTest.cpp">
+    <ClCompile Include="Tests\BitContainerTest.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

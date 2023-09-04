@@ -1,7 +1,9 @@
 ﻿// SignalDecodingQZSSLib.cpp : Определяет функции для статической библиотеки.
 //
-
 #include "pch.h"
+#include "BitContainer/BitContainer.h"
+#include "SignalDecondingQZSSLib.h"
+
 
 std::vector<std::size_t> prefixFunction(const BitContainer& pattern)
 {

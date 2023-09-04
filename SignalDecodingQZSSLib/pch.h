@@ -8,10 +8,11 @@
 #define PCH_H
 
 // Добавьте сюда заголовочные файлы для предварительной компиляции
-#include "framework.h"
 
+#include <string>
 #include <vector>
 #include <stdexcept>
+#include <fstream>
 
 #endif //PCH_H
 

@@ -1,6 +1,6 @@
-#include "pch.h"
+#include "../pch.h"
+#include "../Tests/BitContainerTest.h"
 #include "BitContainer.h"
-#include "BitContainerTest.h"
 
 /*
  * Конструктор по умолчанию
