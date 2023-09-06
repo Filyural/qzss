@@ -112,6 +112,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -139,25 +140,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BitContainer\BitContainer.h" />
-    <ClInclude Include="Tests\BitContainerTest.h" />
+    <ClInclude Include="Headers\BitContainer.h" />
+    <ClInclude Include="Headers\BitContainerTest.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Headers\HeaderRTCM.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="SignalDecondingQZSSLib.h" />
+    <ClInclude Include="Headers\RTCM.h" />
+    <ClInclude Include="Headers\RTCM4050.h" />
+    <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Headers\SignalDecondingQZSSLib.h" />
     <ClInclude Include="Headers\SubTypeOne.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitContainer\BitContainer.cpp" />
-    <ClCompile Include="Tests\BitContainerTest.cpp" />
+    <ClCompile Include="Source\BitContainer.cpp" />
+    <ClCompile Include="Source\BitContainerTest.cpp" />
     <ClCompile Include="Source\HeaderRTCM.cpp" />
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SignalDecodingQZSSLib.cpp" />
+    <ClCompile Include="Source\RTCM.cpp" />
+    <ClCompile Include="Source\RTCM4050.cpp" />
+    <ClCompile Include="Source\SignalDecodingQZSSLib.cpp" />
     <ClCompile Include="Source\SubTypeOne.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

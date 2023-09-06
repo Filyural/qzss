@@ -1,6 +1,7 @@
-#include "../pch.h"
-#include "../Tests/BitContainerTest.h"
-#include "BitContainer.h"
+#include "pch.h"
+
+#include "../Headers/BitContainerTest.h"
+#include "../Headers/BitContainer.h"
 
 /*
  * Конструктор по умолчанию
@@ -21,6 +22,17 @@ BitContainer::BitContainer(const BitContainer& container)
 {
     bits_ = container.bits_;
     size_ = container.size_;
+}
+
+/*
+* Конструктор для инициализации контейнера, копирует <init_vector> в поле <bits_>
+* -------------------------------------------------------------------------------------
+* Constructor for initializing the container, copies <init_vector> to the <bits_> field
+*/
+BitContainer::BitContainer(std::vector<unsigned long> init_vector)
+{
+    bits_ = init_vector;
+    size_ = init_vector.size() * kBitsPerUnsignedLong;
 }
 
 /*
@@ -198,7 +210,7 @@ void BitContainer::fromString(const std::string& str)
  * ---------------------------------------------------------------------------------------------------
  * Returns a substring from the given bit string starting at index <start_index> with a length of <length> bits
  */
-BitContainer BitContainer::subContainer(size_t start_index, size_t length)
+BitContainer& BitContainer::subContainer(const size_t start_index, const size_t length) const
 {
     if (start_index >= size() || length + start_index > size() || length <= 0)
     {
@@ -256,7 +268,7 @@ BitContainer BitContainer::subContainer(size_t start_index, size_t length)
  * If <length> is greater than <size_> - will return a container of size <length> filled with extra <length - size_> zeros at the START of
  * the sequence If <length> is less than <size_> - will return a substring from the given bit string starting from index 0, of size <length>
  */
-BitContainer BitContainer::toLength(size_t length)
+BitContainer BitContainer::toLength(const size_t length)
 {
     if (length == size_)
     {
@@ -279,7 +291,7 @@ BitContainer BitContainer::toLength(size_t length)
  * --------------------------------------------------------------------------------------
  * Get part of container as unsigned long starting at <start_index> of length <length>
  */
-unsigned long BitContainer::getNum(size_t start_index, size_t length)
+unsigned long BitContainer::getNum(size_t start_index, size_t length) const
 {
     if (start_index + length > size() || length > kBitsPerUnsignedLong || length <= 0 || start_index < 0)
     {
@@ -453,39 +465,39 @@ BitContainer& BitContainer::operator=(const BitContainer& container)
 }
 
 /*
-* Применяет XOR к двум контейнерам одинакового размера (если размеры разные, то выбрасывает исключение <invalid_argument>
-* ------------------------------------------------------------------------------------------------------------------------------------
-* Applies XOR to the volume of containers of the same size (if the sizes are different, then throws the constraints <invalid_argument>
-*/
+ * Применяет XOR к двум контейнерам одинакового размера (если размеры разные, то выбрасывает исключение <invalid_argument>
+ * ------------------------------------------------------------------------------------------------------------------------------------
+ * Applies XOR to the volume of containers of the same size (if the sizes are different, then throws the constraints <invalid_argument>
+ */
 BitContainer BitContainer::operator^(const BitContainer& container) const
 {
-    //bool this_smaller = this->size() < container.size();
-    //size_t smallest_size = this_smaller ? this->size() : container.size();
-    //size_t biggest_size = this_smaller ? container.size() : this->size();
-    //BitContainer result(biggest_size);
+    // bool this_smaller = this->size() < container.size();
+    // size_t smallest_size = this_smaller ? this->size() : container.size();
+    // size_t biggest_size = this_smaller ? container.size() : this->size();
+    // BitContainer result(biggest_size);
 
     //// заполняем первые биты, которых нет в меньшем контейнере
     //// битами из бОльшего контейнера
-    //if (this_smaller)
+    // if (this_smaller)
     //{
-    //    for (size_t i = 0; i < biggest_size - smallest_size; i++)
-    //    {
-    //        result.set(i, container.get(i));
-    //    }
-    //}
-    //else
+    //     for (size_t i = 0; i < biggest_size - smallest_size; i++)
+    //     {
+    //         result.set(i, container.get(i));
+    //     }
+    // }
+    // else
     //{
-    //    for (size_t i = 0; i < biggest_size - smallest_size; i++)
-    //    {
-    //        result.set(i, this->get(i));
-    //    }
-    //}
+    //     for (size_t i = 0; i < biggest_size - smallest_size; i++)
+    //     {
+    //         result.set(i, this->get(i));
+    //     }
+    // }
 
     //// заполняем остальные биты
-    //for (size_t i = 0; i < smallest_size; ++i)
+    // for (size_t i = 0; i < smallest_size; ++i)
     //{
-    //    result.set(biggest_size - i - 1, this->get(this->size() - i - 1) ^ container.get(container.size() - i - 1));
-    //}    if (size_ != container.size_)
+    //     result.set(biggest_size - i - 1, this->get(this->size() - i - 1) ^ container.get(container.size() - i - 1));
+    // }    if (size_ != container.size_)
     if (size_ != container.size_)
     {
         throw std::invalid_argument("BitContainers must have the same size for bitwise XOR operation");

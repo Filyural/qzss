@@ -8,6 +8,11 @@ struct MessageType
     unsigned short message_generation_facility_ID;
     unsigned int vendor_ID;
 
+    /*
+    * Вывод информации
+    * ----------------
+    * Info output
+    */
     std::string getInfo()
     {
         std::string result = "";
@@ -63,6 +68,9 @@ private:
     bool alert_flag;
 
 public:
+
+    HeaderRTCM();
+    HeaderRTCM(const HeaderRTCM& header);
     HeaderRTCM(BitContainer message);
 
     unsigned int getTimeOfWeek()

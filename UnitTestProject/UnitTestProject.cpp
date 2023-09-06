@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../SignalDecodingQZSSLib/BitContainer/BitContainer.h"
+#include "../SignalDecodingQZSSLib/Headers/BitContainer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace Microsoft

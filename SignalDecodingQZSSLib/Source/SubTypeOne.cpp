@@ -1,6 +1,7 @@
-#include "../pch.h"
+#include "pch.h"
+
+#include "../Headers/BitContainer.h"
 #include "../Headers/SubTypeOne.h"
-#include "../BitContainer/BitContainer.h"
 
 SubTypeOne::SubTypeOne(BitContainer& message_) : message{message_}
 {

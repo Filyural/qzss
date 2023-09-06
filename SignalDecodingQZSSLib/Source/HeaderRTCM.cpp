@@ -1,12 +1,31 @@
-#include "../pch.h"
-#include "../BitContainer/BitContainer.h"
+#include "pch.h"
+
+#include "../Headers/BitContainer.h"
 #include "../Headers/HeaderRTCM.h"
+
+HeaderRTCM::HeaderRTCM()
+{
+    time_of_week = 0;
+    correction_error_bits = 0;
+    PRN = 0;
+    message_type = {0, 0, 0, 0, 0};
+    alert_flag = 0;
+}
+
+HeaderRTCM::HeaderRTCM(const HeaderRTCM& header)
+{
+    time_of_week = header.time_of_week;
+    correction_error_bits = header.correction_error_bits;
+    PRN = header.PRN;
+    message_type = header.message_type;
+    alert_flag = header.alert_flag;
+}
 
 HeaderRTCM::HeaderRTCM(BitContainer message) : bits{message}
 {
-    time_of_week = message.subContainer(40, 20).getNum(0, 20);
-    correction_error_bits = message.subContainer(60, 4).getNum(0, 4);
-    PRN = message.subContainer(64, 8).getNum(0, 8);
+    time_of_week = message.getNum(40, 20);
+    correction_error_bits = message.getNum(60, 4);
+    PRN = message.getNum(64, 8);
     message_type = {message.get(79), message.get(78), message.get(77), static_cast<unsigned short>(message.getNum(75, 2)),
         static_cast<unsigned short>(message.getNum(72, 3))};
     alert_flag = message.get(80);

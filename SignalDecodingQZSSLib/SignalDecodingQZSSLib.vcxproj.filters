@@ -18,10 +18,10 @@
     <ClInclude Include="framework.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Source\pch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SignalDecondingQZSSLib.h">
+    <ClInclude Include="Headers\SignalDecondingQZSSLib.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Headers\SubTypeOne.h">
@@ -30,18 +30,24 @@
     <ClInclude Include="Headers\HeaderRTCM.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="BitContainer\BitContainer.h">
+    <ClInclude Include="Headers\BitContainer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Tests\BitContainerTest.h">
+    <ClInclude Include="Headers\BitContainerTest.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\RTCM.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\RTCM4050.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SignalDecodingQZSSLib.cpp">
+    <ClCompile Include="Source\SignalDecodingQZSSLib.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Source\pch.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Source\SubTypeOne.cpp">
@@ -50,10 +56,16 @@
     <ClCompile Include="Source\HeaderRTCM.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="BitContainer\BitContainer.cpp">
+    <ClCompile Include="Source\BitContainer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\BitContainerTest.cpp">
+    <ClCompile Include="Source\BitContainerTest.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTCM.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RTCM4050.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

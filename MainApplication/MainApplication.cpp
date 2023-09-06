@@ -30,6 +30,7 @@ int main()
     //cout << "Duration " << duration.count() << endl;
     //return 0;
 
+    //TODO перенести в LEX Data RTCM
     const int MESSAGE_LENGTH = 1776;
     const int FULL_MESSAGE_LENGTH = 1800;
 
@@ -71,7 +72,7 @@ int main()
         }
 
         BitContainer probable_message = bc.subContainer(preamble_index, FULL_MESSAGE_LENGTH);
-        if (checkCRC(probable_message, crc_polynomial, MESSAGE_LENGTH))
+        if (RTCM::checkCRC(probable_message, crc_polynomial, MESSAGE_LENGTH))
         {
             // fout << probable_message.getInfo();
             // founded good preamble_index

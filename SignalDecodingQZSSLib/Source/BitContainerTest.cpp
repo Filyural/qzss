@@ -1,7 +1,7 @@
-#include "../pch.h"
+#include "pch.h"
 
-#include "BitContainerTest.h"
-#include "../BitContainer/BitContainer.h"
+#include "../Headers/BitContainerTest.h"
+#include "../Headers/BitContainer.h"
 
 bool BitContainerTest::test_ALL()
 {

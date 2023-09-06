@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <string>
 #include <vector>
 
 class BitContainer
@@ -14,6 +15,7 @@ private:
 public:
     BitContainer();
     BitContainer(const BitContainer& container);
+    BitContainer(std::vector<unsigned long> init_vector);
     BitContainer(const std::size_t num_bits);
     BitContainer(const std::string& str);
 
@@ -24,9 +26,9 @@ public:
     void add(std::size_t num_bits);
     void add(BitContainer sequence);
     void fromString(const std::string& str);
-    BitContainer subContainer(size_t start_index, size_t length);
-    BitContainer toLength(size_t length);
-    unsigned long getNum(size_t start_index, size_t length);
+    BitContainer& subContainer(size_t start_index, size_t length) const;
+    BitContainer toLength(const size_t length);
+    unsigned long getNum(size_t start_index, size_t length) const;
     void trimLeadingZeros();
     std::string getInfo(size_t num_bits) const;
     bool equals(BitContainer sequence);

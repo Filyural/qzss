@@ -1,8 +1,8 @@
 ﻿// SignalDecodingQZSSLib.cpp : Определяет функции для статической библиотеки.
 //
 #include "pch.h"
-#include "BitContainer/BitContainer.h"
-#include "SignalDecondingQZSSLib.h"
+#include "../Headers/BitContainer.h"
+#include "../Headers/SignalDecondingQZSSLib.h"
 
 
 std::vector<std::size_t> prefixFunction(const BitContainer& pattern)
@@ -122,42 +122,7 @@ size_t getFileSize(std::string path)
     return file_size * 8;
 }
 
-BitContainer calculateCRC(BitContainer message, BitContainer polynomial)
-{
-    message.add(polynomial.size() - 1);
-    size_t new_length = message.size();
 
-    BitContainer sub_message = message.subContainer(0, polynomial.size());
-
-    size_t size_difference;
-    for (size_t i = polynomial.size();;)
-    {
-        sub_message = sub_message ^ polynomial;
-        sub_message.trimLeadingZeros();
-        size_difference = polynomial.size() - sub_message.size();
-
-        if (i + size_difference > new_length)
-        {
-            if (i >= new_length)
-            {
-                return sub_message.toLength(polynomial.size() - 1);
-            }
-            sub_message.add(message.subContainer(i, message.size() - i));
-            return sub_message.toLength(polynomial.size() - 1);
-        }
-        sub_message.add(message.subContainer(i, size_difference));
-        i += size_difference;
-    }
-}
-
-bool checkCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index)
-{
-    BitContainer message = sequence.subContainer(0, crc_index);
-    BitContainer crc = sequence.subContainer(crc_index, sequence.size() - crc_index);
-
-    BitContainer crc_calc = calculateCRC(message, polynomial);
-    return crc == (crc_calc);
-}
 
 bool getHeaderInfo(BitContainer message)
 {

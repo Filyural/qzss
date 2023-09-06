@@ -16,9 +16,5 @@ bool KMP(const BitContainer& text, const BitContainer& pattern, size_t& index);
 BitContainer readFileToBC(std::string path, size_t& message);
 size_t getFileSize(std::string path);
 
-// CRC
-BitContainer calculateCRC(BitContainer message, BitContainer polynomial);
-bool checkCRC(BitContainer sequence, BitContainer polynomial, size_t crc_index);
-
 // QZSS
 bool getHeaderInfo(BitContainer message);
